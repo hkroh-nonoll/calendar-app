@@ -43,7 +43,10 @@ const TempEvent = props => {
 }
 
 const MonthViewList = props => {
-  const { useStartDay, startDay, start, end, viewDateClick, viewEventClick } = props;
+  const { useStartDay, startDate, endDate, week, viewDateClick, viewEventClick } = props;
+
+  const startDay = startDate.getDay();
+  const endDateTime = endDate.getTime();
 
   const handleClick = date => {
     console.log('MonthViewList handleClick');
@@ -68,17 +71,16 @@ const MonthViewList = props => {
 
   return (
     <Row className="calendar-date" type="flex" justify="start" align="top">
-      {Array(7).fill(1).map((_, index) => {
-        const value = start + index;
+      {week.map((day, index) => {
+        const value = day.getDate();
         const prevDate = (useStartDay && index < startDay);
-        const isDimmed = value > end || prevDate;
-        let title = isDimmed ? value % end : value;
-        const listener = _ => handleClick(title);
+        const isDimmed = day.getTime() > endDateTime || prevDate;
+        const listener = _ => handleClick(day);
         const eventListner = (date, text) => handleEventClick(date, text);
-        const content = index % 3 === 0 ? getEvents(index, title, eventListner) : null;
+        const content = index % 3 === 0 ? getEvents(index, day, eventListner) : null;
         return (
-          <Col className={isDimmed ? 'is-dimmed' : ''} span={3} key={`view-${title}`} onClick={listener}>
-            <Card className="temp-card" title={title} bordered={false}>{ content }</Card>
+          <Col className={isDimmed ? 'is-dimmed' : ''} span={3} key={`view-${day}`} onClick={listener}>
+            <Card className="temp-card" title={value} bordered={false}>{ content }</Card>
           </Col>
         );
       })}
@@ -87,14 +89,14 @@ const MonthViewList = props => {
 }
 
 MonthViewList.defaultProps = {
-  start: 1,
-  end: 31,
+  startDate: 1,
+  endDate: 31,
   viewDateClick: () => {},
   viewEventClick: () => {}
 }
 
 const MonthView = props => {
-  const { startDay, endDate, onDateClick, onEventClick } = props;
+  const { dates, startDate, endDate, onDateClick, onEventClick } = props;
 
   const handleDateClick = date => {
     console.log('MonthView handleDateClick', date);
@@ -111,19 +113,19 @@ const MonthView = props => {
   }
 
 
-  const weeks = Array(6).fill(1).map((value, index) => value + (index * 7));
+  // const weeks = Array(6).fill(1).map((value, index) => value + (index * 7));
 
   return (
     <div className="calendar-view">
       <MonthViewHeader />
       <div onDragOver={dragOver}>
-        {weeks.map((value, index) => {
+        {dates.map((week, index) => {
           return (
-            <MonthViewList key={`list-${value}`} 
+            <MonthViewList key={`list-${index}`} 
               useStartDay={index === 0}
-              startDay={startDay}
-              start={value}
-              end={endDate}
+              startDate={startDate}
+              endDate={endDate}
+              week={week}
               viewDateClick={handleDateClick}
               viewEventClick={handleEventClick}
             />
@@ -136,7 +138,7 @@ const MonthView = props => {
 }
 
 MonthView.defaultProps = {
-  startDay: 0,
+  startDate: 1,
   endDate: 31,
   onDateClick: () => {},
   onEventClick: () => {}
