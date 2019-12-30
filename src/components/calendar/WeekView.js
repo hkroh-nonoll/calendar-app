@@ -21,7 +21,6 @@ const WeekView = () => {
   const [hourMarkerPos, setHourMarkerPos] = useState(0);
   const maxDayMilliseconds = 86400000;
   const renderDuration = 1000 * 1;
-  let markerTimeout;
 
   const hourMarkerStyle = {
     position: 'absolute',
@@ -54,22 +53,18 @@ const WeekView = () => {
     return (hour * 60 * 60 * 1000) + (minute * 60 * 1000) + (second * 1000);
   }
 
-  const hourMarkerRender = () => {
-    const currentTime = getTimeInfo();
-    const { hour, minute, second } = currentTime;
-    const currentDayMilliseconds = getMillisecondsByDay(hour, minute, second);
-    const percent = (currentDayMilliseconds / maxDayMilliseconds * 100).toFixed(2);
-
-    setHourMarkerPos(`${percent}%`);
-    markerTimeout = setTimeout(hourMarkerRender, renderDuration);
-  }
-
   useEffect(() => {
-    hourMarkerRender();
-    return () => {
-      clearTimeout(markerTimeout);
+    const hourMarkerRender = () => {
+      const currentTime = getTimeInfo();
+      const { hour, minute, second } = currentTime;
+      const currentDayMilliseconds = getMillisecondsByDay(hour, minute, second);
+      const percent = (currentDayMilliseconds / maxDayMilliseconds * 100).toFixed(2);
+      setHourMarkerPos(`${percent}%`);
     }
-  }, []);
+    hourMarkerRender();
+    const markerTimeout = setInterval(() => hourMarkerRender, renderDuration);
+    return () => clearInterval(markerTimeout);
+  }, [renderDuration]);
 
   return (
     <div className="calendar-week">

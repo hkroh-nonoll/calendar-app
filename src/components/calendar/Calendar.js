@@ -2,7 +2,9 @@ import React, { useState, useCallback } from 'react';
 import { Modal, Form, Input, DatePicker } from 'antd';
 import moment from 'moment';
 
-import { currentDate, addMonth, startOfMonthDay, daysInMonth } from '../../util/date';
+import KDate from '../../lib/date/KDate';
+
+import { addMonth } from '../../util/date';
 
 import ControlView from './ControlView';
 import MonthView from './MonthView';
@@ -20,44 +22,49 @@ const View = props => {
   }
 }
 
+const kdate = new KDate();
+
 const Calendar = () => {
-  const [month, setMonth] = useState(currentDate());
-  const [week] = useState(currentDate());
-  const [startDay, setStartDay] = useState(startOfMonthDay(month));
-  const [endDate, setEndDate] = useState(daysInMonth(month));
+  const [month, setMonth] = useState(kdate);
+  const [week] = useState(kdate);
+  const [startDate, setStartDate] = useState(kdate.startDateOfMonth(month));
+  const [endDate, setEndDate] = useState(kdate.endOfMonth(month));
   const [viewType, setViewType] = useState('month');
   const [createMode, setCreateMode] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
   const [eventModalDate, setEventModalDate] = useState(null);
   const [modalTitle, setModalTitle] = useState(null);
+  const [visibleDates, setVisibleDates] = useState(kdate.monthToArray(month));
+
+  const updateMonth = month => {
+    setStartDate(kdate.startDateOfMonth(month));
+    setEndDate(kdate.endOfMonth(month));
+    setVisibleDates(kdate.monthToArray(month));
+    setMonth(month);
+  }
 
   const onPrevMonthClick = useCallback(_ => {
-    const prevMonth = addMonth({ date: month, value: -1 });
-    setStartDay(startOfMonthDay(prevMonth));
-    setEndDate(daysInMonth(prevMonth));
-    setMonth(prevMonth);
+    console.log('Calendar onPrevMonthClick');
+    const prevMonth = kdate.addMonth(-1, month);
+    updateMonth(prevMonth);
   }, [month]);
 
   const onTodayClick = useCallback(_ => {
     console.log('Calendar onTodayClick');
-    const today = currentDate();
-    setStartDay(startOfMonthDay(today));
-    setEndDate(daysInMonth(today));
-    setMonth(today);
+    const today = new KDate();
+    updateMonth(today);
   }, []);
 
   const onNextMonthClick = useCallback(_ => {
     console.log('Calendar onNextMonthClick');
-    const nextMonth = addMonth({ date: month, value: 1 });
-    setStartDay(startOfMonthDay(nextMonth));
-    setEndDate(daysInMonth(nextMonth));
-    setMonth(nextMonth);
+    const nextMonth = kdate.addMonth(1, month);
+    updateMonth(nextMonth);
   }, [month]);
 
   const onViewTypeChange = useCallback(value => {
     console.log('Calendar onViewTypeChange', value);
     setViewType(value);
-  }, [month]);
+  }, []);
 
   const onDateClick = useCallback(date => {
     console.log('Calendar onDateClick');
@@ -65,7 +72,7 @@ const Calendar = () => {
     setCreateMode(true);
     setEventModalDate(selectedDate);
     setVisibleModal(true);
-  }, [month, week]);
+  }, [month]);
 
   const onEventClick = useCallback((date, text) => {
     console.log('Calendar onEventClick', date, text);
@@ -74,7 +81,7 @@ const Calendar = () => {
     setEventModalDate(selectedDate);
     setModalTitle(text);
     setVisibleModal(true);
-  }, [month, week]);
+  }, [month]);
 
   const handleModalOk = () => {
     console.log('Calendar handleModalOk');
@@ -95,7 +102,7 @@ const Calendar = () => {
   return (
     <div className="calendar">
       <ControlView 
-        currentMonth={month.format('YYYY년 MM월')}
+        currentMonth={kdate.format('YYYY년 MM월', month)}
         onPrevMonthClick={onPrevMonthClick}
         onTodayClick={onTodayClick}
         onNextMonthClick={onNextMonthClick}
@@ -106,8 +113,9 @@ const Calendar = () => {
         currentMonth={month}
         currentWeek={week}
         viewType={viewType}
-        startDay={startDay}
+        startDate={startDate}
         endDate={endDate}
+        dates={visibleDates}
         onDateClick={onDateClick}
         onEventClick={onEventClick}
       />
