@@ -1,23 +1,63 @@
-import deepFreeze from '../deepFreeze';
+import { deepFreeze } from '../utils/deepFreeze';
 
 /**
  * unit 상수 정의
- * @typedef {KDATE_UNIT}
+ * @readonly
+ * @alias KDATE_UNIT
+ * @type {object}
  * @property {string} MONTH
  * @property {string} WEEK
  * @property {string} DAY
+ * @default
  */
 export const KDATE_UNIT = deepFreeze({
-  MONTH: 'MONTH',
-  WEEK: 'WEEK',
-  DATE: 'DATE'
+  MONTH: 'MONTH', // 월
+  WEEK: 'WEEK',   // 주
+  DATE: 'DATE'    // 일
 });
 
 /**
+ * 요일명 상수 정의
+ * @readonly
+ * @alias KDATE_DAY_NAME_WEEK
+ * @type {array}
+ * @property {string} 0 - 일
+ * @property {string} 1 - 월
+ * @property {string} 2 - 화
+ * @property {string} 3 - 수
+ * @property {string} 4 - 목
+ * @property {string} 5 - 금
+ * @property {string} 6 - 토
+ * @default
+ */
+export const KDATE_DAY_NAME_WEEK = deepFreeze(['일', '월', '화', '수', '목', '금', '토']);
+
+/**
  * 요일 시작 index 값 상수 정의
- * 일 / 월 / 화 / 수 / 목 / 금 / 토
+ * @readonly
+ * @alias KDATE_START_DAY_WEEK
+ * @type {array}
+ * @property {number} 0 - 일
+ * @property {number} 1 - 월
+ * @property {number} 2 - 화
+ * @property {number} 3 - 수
+ * @property {number} 4 - 목
+ * @property {number} 5 - 금
+ * @property {number} 6 - 토
+ * @default [0, 1, 2, 3, 4, 5, 6]
  */
 export const KDATE_START_DAY_WEEK = deepFreeze([0, 1, 2, 3, 4, 5, 6]);
+
+
+/**
+ * 주당 요일수
+ */
+export const KDATE_WEEK = 7;
+
+/**
+ * 최대 월 일자수 - 주당 요일 수 * 6주
+ */
+export const KDATE_MAX_DATES = 7 * 6;
 
 
 /**
@@ -91,7 +131,7 @@ class KDate extends Date {
   /**
    * 월의 시작일 반환
    * @param {string | Date} [date=new Date()]
-   * @returns
+   * @returns {Date}
    * @memberof KDate
    */
   startDateOfMonth(date = new Date()) {
@@ -104,7 +144,7 @@ class KDate extends Date {
   /**
    * 월의 시작일, 요일 반환
    * @param {string | Date} [date=new Date()]
-   * @returns
+   * @returns {number}
    * @memberof KDate
    */
   startDayOfMonth(date = new Date()) {
@@ -170,8 +210,8 @@ class KDate extends Date {
     let week;
 
     Array(totalDates).fill(0).forEach((_, index) => {
-      if (!(index % 7)) {
-        week = monthArray[Math.round(index / 7)] = [];
+      if (!(index % KDATE_WEEK)) {
+        week = monthArray[Math.round(index / KDATE_WEEK)] = [];
       }
       week.push(cursor);
       cursor = this.addDate(1, cursor);

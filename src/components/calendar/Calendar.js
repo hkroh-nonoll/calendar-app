@@ -4,8 +4,6 @@ import moment from 'moment';
 
 import KDate from '../../lib/date/KDate';
 
-import { addMonth } from '../../util/date';
-
 import ControlView from './ControlView';
 import MonthView from './MonthView';
 import WeekView from './WeekView';
