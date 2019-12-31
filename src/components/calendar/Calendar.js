@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { notification } from 'antd';
 import moment from 'moment';
 
@@ -26,7 +26,7 @@ const View = props => {
 }
 
 const Calendar = props => {
-  const { defaultDate } = props;
+  const { defaultDate, events } = props;
 
   const [month, setMonth] = useState(defaultDate);
   const [week] = useState(defaultDate);
@@ -38,12 +38,19 @@ const Calendar = props => {
   const [eventModalDate, setEventModalDate] = useState(null);
   const [modalTitle, setModalTitle] = useState(null);
   const [visibleDates, setVisibleDates] = useState(ExtsDate.monthToArray({ date: month }));
+  const [eventList, setEventList] = useState(events);
 
   const updateMonth = month => {
     setStartDate(ExtsDate.startDateOfMonth({ date: month }));
     setEndDate(ExtsDate.endOfMonth({ date: month }));
     setVisibleDates(ExtsDate.monthToArray({ date: month }));
     setMonth(month);
+  }
+
+  const clearModal = () => {
+    setEventModalDate('');
+    setModalTitle('');
+    setVisibleModal(false);
   }
 
   const onPrevMonthClick = useCallback(_ => {
@@ -85,7 +92,7 @@ const Calendar = props => {
     setVisibleModal(true);
   }, [month]);
 
-  const onModalConfirmClick = ({ title, startAt, endAt }) => {
+  const onModalConfirmClick = ({ form, title, startAt, endAt }) => {
     console.log('Calendar onModalConfirmClick', title, startAt, endAt);
     const diffTime = ExtsDate.diff(startAt, endAt);
     if (diffTime < 0) {
@@ -93,25 +100,37 @@ const Calendar = props => {
         message: '입력 값을 확인하세요',
         description: '종료일은 시작일 이후 일자로 선택하세요.'
       });
-    } else {
-      setVisibleModal(false);
+      // TODO - eventList 중복 일자 검증 처리
+      return;
     }
+
+    const newEvent = {
+      title,
+      startAt: moment(startAt).format(),
+      endAt: moment(endAt).format()
+    };
+    const list = eventList.concat([newEvent]);
+
+    setEventList(list);
+    clearModal();
   }
 
   const onModalCancelClick = () => {
     console.log('Calendar onCancelClick');
-    setVisibleModal(false);
+    clearModal();
   }
 
   const onModalSubmit = () => {
     console.log('Calendar onModalSubmit');
   }
 
-  useCallback(() => {
+  useEffect(() => {
     return () => {
-      setVisibleModal(false);
+      clearModal();
     }
   }, []);
+
+  console.log('eventList', eventList);
 
   return (
     <div className="calendar">
@@ -130,6 +149,7 @@ const Calendar = props => {
         startDate={startDate}
         endDate={endDate}
         dates={visibleDates}
+        events={eventList}
         onDateClick={onDateClick}
         onEventClick={onEventClick}
       />
@@ -185,7 +205,14 @@ const Calendar = props => {
 }
 
 Calendar.defaultProps = {
-  defaultDate: new Date()
+  defaultDate: new Date(),
+  events: [
+    {
+      title: '12월 31일 10 ~ 11시 일정',
+      startAt: '2019-12-31T10:00:00+09:00',
+      endAt: '2019-12-31T11:00:00+09:00'
+    }
+  ]
 };
 
 export default Calendar;

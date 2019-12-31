@@ -67,6 +67,8 @@ export const WEEK_SIZE = 7;
  */
 export const MAX_DATES = WEEK_SIZE * 6;
 
+export const DAY_MILLISECONDS = 86400000;
+
 
 /**
  * date 관련 상수 정의
@@ -79,5 +81,6 @@ export default {
   DAY_NAME_WEEK,
   START_DAY_WEEK,
   WEEK_SIZE,
-  MAX_DATES
+  MAX_DATES,
+  DAY_MILLISECONDS
 };

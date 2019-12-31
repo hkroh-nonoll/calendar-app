@@ -5,14 +5,17 @@ import { Modal, Form, Input, DatePicker } from 'antd';
 import ExtsDate from '../../lib/extensions/ExtsDate';
 
 const EventModal = props => {
-  const { visible, onConfirmClick, onCancelClick, onSubmit, title, startAt, endAt, format } = props;
+  const { form, visible, onConfirmClick, onCancelClick, onSubmit, title, startAt, endAt, format } = props;
 
   const [eventTitle, setEventTitle] = useState(title);
   const [eventStartAt, setEventStatAt] = useState(moment(startAt));
   const [eventEndAt, setEventEndAt] = useState(moment(endAt));
 
   const getEventData = () => {
-    return { title: eventTitle, startAt: eventStartAt.toDate(), endAt: eventEndAt.toDate() };
+    // @see https://codepen.io/anon/pen/WLOrmq
+    // form.resetFields();
+    // console.log('form.resetFields', form.resetFields);
+    return { form, title: eventTitle, startAt: eventStartAt.toDate(), endAt: eventEndAt.toDate() };
   };
 
   const handleConfirmClick = _ => onConfirmClick(getEventData());
@@ -66,4 +69,4 @@ EventModal.defaultProps = {
   onSubmit: () => {}
 };
 
-export default EventModal;
+export default Form.create()(EventModal);

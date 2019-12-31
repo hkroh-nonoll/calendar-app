@@ -22,4 +22,20 @@
 
 .temp-card .ant-card-body {
   min-height: calc(24 * 5px);
+  padding: 2px;
+}
+
+.temp-today .ant-card {
+  background: #e6f7ff;
+}
+
+.temp-event {
+  height: 24px;
+  line-height: 24px;
+  border-radius: 2px;
+  margin: 4px 8px 0 8px;
+  color: #ffffff;
+  background-color: #00a9ff;
+  border-color: #00a9ff;
+  padding: 2px 0 0;
 }
