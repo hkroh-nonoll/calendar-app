@@ -35,8 +35,9 @@ const Calendar = props => {
   const [viewType, setViewType] = useState('month');
   const [createMode, setCreateMode] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
-  const [eventModalDate, setEventModalDate] = useState(null);
-  const [modalTitle, setModalTitle] = useState(null);
+  const [eventTitle, setEventTitle] = useState(null);
+  const [eventStartAt, setEventStartAt] = useState(null);
+  const [eventEndAt, setEventEndAt] = useState(null);
   const [visibleDates, setVisibleDates] = useState(ExtsDate.monthToArray({ date: month }));
   const [eventList, setEventList] = useState(events);
 
@@ -48,8 +49,7 @@ const Calendar = props => {
   }
 
   const clearModal = () => {
-    setEventModalDate('');
-    setModalTitle('');
+    setEventTitle('');
     setVisibleModal(false);
   }
 
@@ -77,18 +77,26 @@ const Calendar = props => {
 
   const onDateClick = useCallback(date => {
     console.log('Calendar onDateClick');
-    const selectedDate = moment(`${moment(month).format('YYYY-MM')}-${date}`);
-    setCreateMode(true);
-    setEventModalDate(selectedDate);
+    // const selectedDate = moment(`${moment(month).format('YYYY-MM')}-${date}`).format();
+    // console.log('selectedDate', selectedDate, month, date);
+    
+    const startAt = date;
+    const endAt = ExtsDate.addHour({ date });
+
+    setEventTitle('');
+    setEventStartAt(startAt);
+    setEventEndAt(endAt);
     setVisibleModal(true);
   }, [month]);
 
-  const onEventClick = useCallback((date, text) => {
-    console.log('Calendar onEventClick', date, text);
-    const selectedDate = moment(`${moment(month).format('YYYY-MM')}-${date}`);
-    setCreateMode(false);
-    setEventModalDate(selectedDate);
-    setModalTitle(text);
+  const onEventClick = useCallback(event => {
+    // console.log('Calendar onEventClick', date, text);
+    const { title, startAt, endAt } = event;
+    console.log('Calendar onEventClick', title, startAt, endAt);
+    // const selectedDate = moment(`${moment(month).format('YYYY-MM')}-${date}`);
+    setEventTitle(title);
+    setEventStartAt(startAt);
+    setEventEndAt(endAt);
     setVisibleModal(true);
   }, [month]);
 
@@ -153,13 +161,19 @@ const Calendar = props => {
         onDateClick={onDateClick}
         onEventClick={onEventClick}
       />
-
-      <EventModal 
-        visible={createMode && visibleModal}
-        onConfirmClick={onModalConfirmClick}
-        onCancelClick={onModalCancelClick}
-        onSubmit={onModalSubmit}
-      />
+      
+      {/* 임시 - 재갱신 처리 */}
+      {visibleModal && 
+        <EventModal 
+          visible={visibleModal}
+          title={eventTitle}
+          startAt={eventStartAt}
+          endAt={eventEndAt}
+          onConfirmClick={onModalConfirmClick}
+          onCancelClick={onModalCancelClick}
+          onSubmit={onModalSubmit}
+        />
+      }
 
 {/* 
       <Modal

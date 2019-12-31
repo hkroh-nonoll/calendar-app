@@ -58,9 +58,9 @@ const MonthViewList = props => {
     viewDateClick(date);
   }
 
-  const handleEventClick = (date, text) => {
-    console.log('MonthViewList handleEventClick', date, text);
-    viewEventClick(date, text);
+  const handleEventClick = (event, text) => {
+    console.log('MonthViewList handleEventClick', event, text);
+    viewEventClick(event, text);
   }
 
   const getEvents = (parentIndex, date, eventListner) => {
@@ -107,7 +107,7 @@ const MonthViewList = props => {
         const prevDate = (useStartDay && index < startDay);
         const isDimmed = day.getTime() > endDateTime || prevDate;
         const listener = _ => handleClick(day);
-        const eventListner = (date, text) => handleEventClick(date, text);
+        const eventListner = (event, text) => handleEventClick(event, text);
         const event = getEvents(index, day, eventListner);
 
         // FIX 임시 처리
@@ -150,9 +150,9 @@ const MonthView = props => {
     onDateClick(date);
   }
 
-  const handleEventClick = (date, text) => {
-    console.log('MonthView handleEventClick', date, text);
-    onEventClick(date, text);
+  const handleEventClick = (event, text) => {
+    console.log('MonthView handleEventClick', event, text);
+    onEventClick(event, text);
   }
 
   const dragOver = e => {

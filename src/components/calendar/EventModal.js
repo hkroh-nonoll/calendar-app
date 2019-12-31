@@ -22,6 +22,8 @@ const EventModal = props => {
   const handleCancelClick = _ => onCancelClick(getEventData());
   const handleSubmit = _ => onSubmit(getEventData());
 
+  console.log('eventTitle', eventTitle, title);
+
   return (
     <Modal
       title="일정 관리"
@@ -33,7 +35,7 @@ const EventModal = props => {
         <Form.Item label="제목">
           <Input
             placeholder="일정 제목"
-            defaultValue={eventTitle}
+            defaultValue={title}
             onChange={e => setEventTitle(e.target.value)}
           />
         </Form.Item>
@@ -69,4 +71,5 @@ EventModal.defaultProps = {
   onSubmit: () => {}
 };
 
-export default Form.create()(EventModal);
+// export default Form.create()(EventModal);
+export default EventModal;
