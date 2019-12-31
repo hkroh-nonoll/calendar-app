@@ -1,7 +1,7 @@
 import React from 'react';
 // import { Layout, Typography } from 'antd';
 
-import Calendar from './components/calendar/Calendar';
+import Calendar from '../components/calendar/Calendar';
 
 // const { Header, Footer, Content } = Layout;
 // const { Title } = Typography;
@@ -15,4 +15,3 @@ function App() {
 }
 
 export default App;
-
