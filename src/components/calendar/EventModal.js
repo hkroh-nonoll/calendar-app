@@ -5,19 +5,24 @@ import { Modal, Form, Input, DatePicker } from 'antd';
 import ExtsDate from '../../lib/extensions/ExtsDate';
 
 const EventModal = props => {
-  const { visible, onConfirmClick, onCancelClick, onSubmit, title, startAt, endAt, format } = props;
+  const { form, visible, onConfirmClick, onCancelClick, onSubmit, title, startAt, endAt, format } = props;
 
   const [eventTitle, setEventTitle] = useState(title);
   const [eventStartAt, setEventStatAt] = useState(moment(startAt));
   const [eventEndAt, setEventEndAt] = useState(moment(endAt));
 
   const getEventData = () => {
-    return { title: eventTitle, startAt: eventStartAt.toDate(), endAt: eventEndAt.toDate() };
+    // @see https://codepen.io/anon/pen/WLOrmq
+    // form.resetFields();
+    // console.log('form.resetFields', form.resetFields);
+    return { form, title: eventTitle, startAt: eventStartAt.toDate(), endAt: eventEndAt.toDate() };
   };
 
   const handleConfirmClick = _ => onConfirmClick(getEventData());
   const handleCancelClick = _ => onCancelClick(getEventData());
   const handleSubmit = _ => onSubmit(getEventData());
+
+  console.log('eventTitle', eventTitle, title);
 
   return (
     <Modal
@@ -30,7 +35,7 @@ const EventModal = props => {
         <Form.Item label="제목">
           <Input
             placeholder="일정 제목"
-            defaultValue={eventTitle}
+            defaultValue={title}
             onChange={e => setEventTitle(e.target.value)}
           />
         </Form.Item>
@@ -66,4 +71,5 @@ EventModal.defaultProps = {
   onSubmit: () => {}
 };
 
+// export default Form.create()(EventModal);
 export default EventModal;
