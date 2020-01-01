@@ -1,33 +1,18 @@
+import PropTypes from 'prop-types';
 import React from 'react';
-
 import { Row, Col, Button, Typography, Radio } from 'antd';
+import { VIEW_TYPE } from 'lib/constants/calendar';
 
 const ButtonGroup = Button.Group;
 const { Text } = Typography;
 
 const ControlView = props => {
-  const { currentMonth, viewType, onPrevMonthClick, onTodayClick, onNextMonthClick, onViewTypeChange } = props;
+  const { currentMonth, currentWeek, viewType, onPrevMonthClick, onTodayClick, onNextMonthClick, onViewTypeChange } = props;
 
-  const handlePrevClick = _ => {
-    console.log('handlePrevClick');
-    onPrevMonthClick();
-  }
-
-  const handleTodayClick = _ => {
-    console.log('handleTodayClick');
-    onTodayClick();
-  }
-
-  const handleNextClick = _ => {
-    console.log('handleNextClick');
-    onNextMonthClick();
-  }
-
-  const handleViewTypeChange = e => {
-    const { value } = e.target;
-    console.log('handleViewTypeChange', value);
-    onViewTypeChange(value);
-  }
+  const handlePrevClick = _ => onPrevMonthClick();
+  const handleTodayClick = _ => onTodayClick();
+  const handleNextClick = _ => onNextMonthClick();
+  const handleViewTypeChange = e => onViewTypeChange(e.target.value);
 
   return (
     <>
@@ -40,15 +25,12 @@ const ControlView = props => {
           </ButtonGroup>
         </Col>
         <Col span={7}>
-          {viewType === 'month' 
-            ? <Text>{currentMonth}</Text>
-            : <Text>{currentMonth} ~ {currentMonth}</Text>
-          }
+          {viewType === VIEW_TYPE.MONTH ? <Text>{currentMonth}</Text> : <Text>{currentWeek}</Text>}
         </Col>
         <Col span={7}>
           <Radio.Group defaultValue={viewType} buttonStyle="solid" onChange={handleViewTypeChange}>
-            <Radio.Button value="month">Month</Radio.Button>
-            <Radio.Button value="week">Week</Radio.Button>
+            <Radio.Button value={VIEW_TYPE.MONTH}>Month</Radio.Button>
+            <Radio.Button value={VIEW_TYPE.WEEK}>Week</Radio.Button>
           </Radio.Group>
         </Col>
       </Row>
@@ -56,13 +38,24 @@ const ControlView = props => {
   );
 }
 
+ControlView.propTypes = {
+  currentMonth: PropTypes.string,
+  currentWeek: PropTypes.string,
+  viewType: PropTypes.string.isRequired,
+  onPrevMonthClick: PropTypes.func,
+  onTodayClick: PropTypes.func,
+  onNextMonthClick: PropTypes.func,
+  onViewTypeChange: PropTypes.func
+};
+
 ControlView.defaultProps = {
   currentMonth: 'YYYY년 MM월',
-  viewType: 'month',
+  currentWeek: 'YYYY년 MM월 DD일 ~ YYYY년 MM월 DD일',
+  viewType: VIEW_TYPE.MONTH,
   onPrevMonthClick: () => {},
   onTodayClick: () => {},
   onNextMonthClick: () => {},
   onViewTypeChange: () => {}
-}
+};
 
 export default ControlView;

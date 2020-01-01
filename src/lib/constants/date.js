@@ -1,4 +1,4 @@
-import { deepFreeze } from '../utils/deepFreeze';
+import { deepFreeze } from 'lib/utils/deepFreeze';
 
 /**
  * unit 상수 정의
