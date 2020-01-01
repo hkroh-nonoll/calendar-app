@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import moment from 'moment';
 import { Modal, Button, Form, Input, DatePicker } from 'antd';
 
-import ExtsDate from '../../lib/extensions/ExtsDate';
+import ExtsDate from 'lib/extensions/ExtsDate';
 
 const EventModal = props => {
   const { form, visible, onConfirmClick, onCancelClick, onDeleteClick, onSubmit, eventEdit, title, startAt, endAt, showTime, format } = props;
