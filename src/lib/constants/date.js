@@ -67,7 +67,23 @@ export const WEEK_SIZE = 7;
  */
 export const MAX_DATES = WEEK_SIZE * 6;
 
-export const DAY_MILLISECONDS = 86400000;
+/**
+ * 한시간 Milliseconds 값
+ * @readonly
+ * @alias DATE/HOUR_MILLISECONDS
+ * @type {number}
+ * @default 3600000
+ */
+export const HOUR_MILLISECONDS = 3600000;
+
+/**
+ * 하루 Milliseconds 값
+ * @readonly
+ * @alias DATE/DAY_MILLISECONDS
+ * @type {number}
+ * @default 86400000
+ */
+export const DAY_MILLISECONDS = HOUR_MILLISECONDS * 24;
 
 
 /**
@@ -82,5 +98,6 @@ export default {
   START_DAY_WEEK,
   WEEK_SIZE,
   MAX_DATES,
+  HOUR_MILLISECONDS,
   DAY_MILLISECONDS
 };
