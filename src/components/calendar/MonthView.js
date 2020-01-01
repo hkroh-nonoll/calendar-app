@@ -19,11 +19,12 @@ const MonthViewHeader = () => {
 }
 
 const TempEvent = props => {
-  const { onEventClick, date, title, startAt, endAt } = props;
+  const { onEventClick, date, event } = props;
+  const { title } = event.toModel();
 
   const handleClick = e => {
     e.stopPropagation();
-    onEventClick({ date, title, startAt, endAt });
+    onEventClick({ date, event });
   }
 
   const dragStart = e => {
@@ -44,7 +45,7 @@ const TempEvent = props => {
       onDragStart={dragStart}
       onDragEnd={dragEnd}
       title={title}
-    >{ title }</div>
+    >{title}</div>
   );
 }
 
@@ -69,21 +70,19 @@ const MonthViewList = props => {
 
     const hasEvents = events.filter(event => {
       const dateTime = date.getTime();
-      const { startAt, endAt } = event;
+      const { startAt, endAt } = event.toModel();
       return +new Date(startAt) >= dateTime && +new Date(endAt) <= (dateTime + DAY_MILLISECONDS);
     });
 
     return (
       <>
         {hasEvents.map(event => {
-          const { title, startAt, endAt } = event;
+          const { uuid } = event.toModel();
           return (
             <TempEvent 
-              key={`event-${startAt}-${endAt}`}
+              key={uuid}
               date={date}
-              title={title}
-              startAt={startAt}
-              endAt={endAt}
+              event={event}
               onEventClick={eventListner}
             />
           );
@@ -111,7 +110,7 @@ const MonthViewList = props => {
         const eventListner = (event, text) => handleEventClick(event, text);
         const event = getEvents(index, day, eventListner);
 
-        // FIX 임시 처리
+        // FIXME: 임시 처리
         const isToday = moment(new Date()).format('YYYY-MM-DD') === moment(day).format('YYYY-MM-DD')
         const dateClassName = (() => {
           let className = '';
@@ -151,9 +150,9 @@ const MonthView = props => {
     onDateClick(date);
   }
 
-  const handleEventClick = (event, text) => {
-    console.log('MonthView handleEventClick', event, text);
-    onEventClick(event, text);
+  const handleEventClick = ({ date, event }) => {
+    console.log('MonthView handleEventClick', date, event);
+    onEventClick({ date, event });
   }
 
   const dragOver = e => {
