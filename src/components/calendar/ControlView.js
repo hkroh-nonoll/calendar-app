@@ -7,11 +7,11 @@ const ButtonGroup = Button.Group;
 const { Text } = Typography;
 
 const ControlView = props => {
-  const { currentMonth, currentWeek, viewType, onPrevMonthClick, onTodayClick, onNextMonthClick, onViewTypeChange } = props;
+  const { currentMonth, currentWeek, viewType, onPrevClick, onTodayClick, onNextClick, onViewTypeChange } = props;
 
-  const handlePrevClick = _ => onPrevMonthClick();
+  const handlePrevClick = _ => onPrevClick();
   const handleTodayClick = _ => onTodayClick();
-  const handleNextClick = _ => onNextMonthClick();
+  const handleNextClick = _ => onNextClick();
   const handleViewTypeChange = e => onViewTypeChange(e.target.value);
 
   return (
@@ -42,9 +42,9 @@ ControlView.propTypes = {
   currentMonth: PropTypes.string,
   currentWeek: PropTypes.string,
   viewType: PropTypes.string.isRequired,
-  onPrevMonthClick: PropTypes.func,
+  onPrevClick: PropTypes.func,
   onTodayClick: PropTypes.func,
-  onNextMonthClick: PropTypes.func,
+  onNextClick: PropTypes.func,
   onViewTypeChange: PropTypes.func
 };
 
@@ -52,9 +52,9 @@ ControlView.defaultProps = {
   currentMonth: 'YYYY년 MM월',
   currentWeek: 'YYYY년 MM월 DD일 ~ YYYY년 MM월 DD일',
   viewType: VIEW_TYPE.MONTH,
-  onPrevMonthClick: () => {},
+  onPrevClick: () => {},
   onTodayClick: () => {},
-  onNextMonthClick: () => {},
+  onNextClick: () => {},
   onViewTypeChange: () => {}
 };
 

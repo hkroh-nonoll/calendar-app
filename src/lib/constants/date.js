@@ -58,6 +58,8 @@ export const START_DAY_WEEK = deepFreeze([0, 1, 2, 3, 4, 5, 6]);
  */
 export const WEEK_SIZE = 7;
 
+export const MAX_HOURS = 24;
+
 /**
  * 최대 월 일자수 - WEEK_SIZE(주당 요일수) * 6주
  * @readonly
@@ -97,6 +99,7 @@ export default {
   DAY_NAME_WEEK,
   START_DAY_WEEK,
   WEEK_SIZE,
+  MAX_HOURS,
   MAX_DATES,
   HOUR_MILLISECONDS,
   DAY_MILLISECONDS
