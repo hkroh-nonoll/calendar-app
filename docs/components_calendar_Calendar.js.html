@@ -46,7 +46,7 @@
             <div class="column is-3" id="sidebarNav">
                 <div class="sidebar">
                     <nav>
-                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="CalendarModel.html">CalendarModel</a></li><li><a href="EventModel.html">EventModel</a></li><li><a href="ExtsDate.html">ExtsDate</a></li><li><a href="Model.html">Model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Calendar">Calendar</a></li><li><a href="global.html#DATE">DATE</a></li><li><a href="global.html#DATE/DAY_MILLISECONDS">DATE/DAY_MILLISECONDS</a></li><li><a href="global.html#DATE/DAY_NAME_WEEK">DATE/DAY_NAME_WEEK</a></li><li><a href="global.html#DATE/HOUR_MILLISECONDS">DATE/HOUR_MILLISECONDS</a></li><li><a href="global.html#DATE/MAX_DATES">DATE/MAX_DATES</a></li><li><a href="global.html#DATE/START_DAY_WEEK">DATE/START_DAY_WEEK</a></li><li><a href="global.html#DATE/UNIT">DATE/UNIT</a></li><li><a href="global.html#DATE/WEEK_SIZE">DATE/WEEK_SIZE</a></li><li><a href="global.html#deepFreeze">deepFreeze</a></li><li><a href="global.html#ERROR_TYPES">ERROR_TYPES</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT">ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT">ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT</a></li><li><a href="global.html#ERROR_TYPES/EVENT_INVALID_TIME_DIFF">ERROR_TYPES/EVENT_INVALID_TIME_DIFF</a></li><li><a href="global.html#uuidv4">uuidv4</a></li></ul></div>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="CalendarModel.html">CalendarModel</a></li><li><a href="EventModel.html">EventModel</a></li><li><a href="ExtsDate.html">ExtsDate</a></li><li><a href="Model.html">Model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Calendar">Calendar</a></li><li><a href="global.html#CALENDAR">CALENDAR</a></li><li><a href="global.html#CALENDAR/VIEW_TYPE">CALENDAR/VIEW_TYPE</a></li><li><a href="global.html#DATE">DATE</a></li><li><a href="global.html#DATE/DAY_MILLISECONDS">DATE/DAY_MILLISECONDS</a></li><li><a href="global.html#DATE/DAY_NAME_WEEK">DATE/DAY_NAME_WEEK</a></li><li><a href="global.html#DATE/HOUR_MILLISECONDS">DATE/HOUR_MILLISECONDS</a></li><li><a href="global.html#DATE/MAX_DATES">DATE/MAX_DATES</a></li><li><a href="global.html#DATE/START_DAY_WEEK">DATE/START_DAY_WEEK</a></li><li><a href="global.html#DATE/UNIT">DATE/UNIT</a></li><li><a href="global.html#DATE/WEEK_SIZE">DATE/WEEK_SIZE</a></li><li><a href="global.html#deepFreeze">deepFreeze</a></li><li><a href="global.html#ERROR_TYPES">ERROR_TYPES</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT">ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT">ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT</a></li><li><a href="global.html#ERROR_TYPES/EVENT_INVALID_TIME_DIFF">ERROR_TYPES/EVENT_INVALID_TIME_DIFF</a></li><li><a href="global.html#uuidv4">uuidv4</a></li></ul></div>
                     </nav>
                 </div>
             </div>
@@ -65,11 +65,12 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import React, { useState, useCallback, useEffect } from 'react';
-import { notification } from 'antd';
 import moment from 'moment';
 
+import { VIEW_TYPE } from 'lib/constants/calendar';
 import ExtsDate from 'lib/extensions/ExtsDate';
 
+import { openNotificationSuccess, openNotificationWarning } from 'components/notification';
 import ControlView from 'components/calendar/ControlView';
 import MonthView from 'components/calendar/MonthView';
 import WeekView from 'components/calendar/WeekView';
@@ -80,17 +81,14 @@ import EventModel from 'lib/models/Calendar/EventModel';
 
 import { CALENDAR_INVALID_ADD_EVENT, EVENT_INVALID_TIME_DIFF } from 'lib/constants/errorTypes';
 
-const openNotificationWithIcon = ({ message = '', description = '' }) => {
-  notification['warning']({ message, description });
-}
-
 const View = props => {
   const { viewType } = props;
 
   switch(viewType) {
-    case 'week':
+    case VIEW_TYPE.WEEK:
       return &lt;WeekView {...props} />;
-    case 'month':
+
+    case VIEW_TYPE.MONTH:
     default:
       return &lt;MonthView {...props} />;
   }
@@ -119,57 +117,104 @@ const Calendar = props => {
   const { defaultDate, events } = props;
 
   const [month, setMonth] = useState(defaultDate);
-  const [week] = useState(defaultDate);
+  const [week, setWeek] = useState(ExtsDate.startDateOfWeek({ date: defaultDate }));
   const [startDate, setStartDate] = useState(ExtsDate.startDateOfMonth({ date: month }));
   const [endDate, setEndDate] = useState(ExtsDate.endOfMonth({ date: month }));
-  const [viewType, setViewType] = useState('month');
+  const [viewType, setViewType] = useState(VIEW_TYPE.WEEK);
   const [visibleModal, setVisibleModal] = useState(false);
   const [eventTitle, setEventTitle] = useState(null);
   const [eventStartAt, setEventStartAt] = useState(null);
   const [eventEndAt, setEventEndAt] = useState(null);
   const [eventEdit, setEventEdit] = useState(null);
-  const [visibleDates, setVisibleDates] = useState(ExtsDate.monthToArray({ date: month }));
+  const [visibleDates, setVisibleDates] = useState(
+    viewType === VIEW_TYPE.MONTH 
+    ? ExtsDate.monthToArray({ date: month })
+    : ExtsDate.weekToArray(week)
+  );
   const [eventList, setEventList] = useState([]);
 
-  const updateMonth = month => {
-    setStartDate(ExtsDate.startDateOfMonth({ date: month }));
-    setEndDate(ExtsDate.endOfMonth({ date: month }));
-    setVisibleDates(ExtsDate.monthToArray({ date: month }));
-    setMonth(month);
-  }
+  const updateMonth = date => {
+    const changeMonth = { date };
+    setStartDate(ExtsDate.startDateOfMonth(changeMonth));
+    setEndDate(ExtsDate.endOfMonth(changeMonth));
+    setVisibleDates(ExtsDate.monthToArray(changeMonth));
+    setMonth(date);
+    setWeek(ExtsDate.startDateOfWeek(changeMonth));
+  };
 
-  const clearModal = () => {
+  const updateWeek = date => {
+    const changeWeek = { date };
+    setStartDate(ExtsDate.startDateOfMonth(changeWeek));
+    setEndDate(ExtsDate.endOfMonth(changeWeek));
+    setVisibleDates(ExtsDate.weekToArray(changeWeek));
+    setMonth(date);
+    setWeek(ExtsDate.startDateOfWeek(changeWeek));
+  };
+
+  const clearModal = _ => {
     setEventEdit(null);
     setVisibleModal(false);
   }
 
-  const onPrevMonthClick = useCallback(_ => {
-    console.log('Calendar onPrevMonthClick');
-    const prevMonth = ExtsDate.addMonth({ date: month, value: -1 });
-    updateMonth(prevMonth);
-  }, [month]);
+  const onCalendarPrevClick = useCallback(_ => {
+    switch (viewType) {
+      case VIEW_TYPE.WEEK:
+        const prevWeek = ExtsDate.addWeek({ date: week, value: -1 });
+        updateWeek(prevWeek);
+        break;
 
-  const onTodayClick = useCallback(_ => {
-    console.log('Calendar onTodayClick');
-    updateMonth(defaultDate);
-  }, [defaultDate]);
+      case VIEW_TYPE.MONTH:
+      default:
+        const prevMonth = ExtsDate.addMonth({ date: month, value: -1 });
+        updateMonth(prevMonth);
+        break;
+    }
+  }, [month, week, viewType]);
 
-  const onNextMonthClick = useCallback(_ => {
-    console.log('Calendar onNextMonthClick');
-    const nextMonth = ExtsDate.addMonth({ date: month, value: 1 });
-    updateMonth(nextMonth);
-  }, [month]);
+  const onCalendarTodayClick = useCallback(_ => {
+    switch (viewType) {
+      case VIEW_TYPE.WEEK:
+        updateWeek(defaultDate);
+        break;
 
-  const onViewTypeChange = useCallback(value => {
-    console.log('Calendar onViewTypeChange', value);
+      case VIEW_TYPE.MONTH:
+      default:
+        updateMonth(defaultDate);
+        break;
+    }
+  }, [defaultDate, month, week, viewType]);
+
+  const onCalendarNextClick = useCallback(_ => {
+    switch (viewType) {
+      case VIEW_TYPE.WEEK:
+      default:
+        const nextWeek = ExtsDate.addWeek({ date: week, value: 1 });
+        console.log('nextWeek', nextWeek);
+        updateWeek(nextWeek);
+        break;
+
+      case VIEW_TYPE.MONTH:
+        const nextMonth = ExtsDate.addMonth({ date: month, value: 1 });
+        updateMonth(nextMonth);
+        break;
+    }
+  }, [month, week, viewType]);
+
+  const onCalendarViewTypeChange = useCallback(value => {
+    switch (value) {
+      case VIEW_TYPE.WEEK:
+        updateWeek(week);
+        break;
+
+      case VIEW_TYPE.MONTH:
+      default:
+        updateMonth(month);
+        break;
+    }
     setViewType(value);
   }, []);
 
   const onDateClick = useCallback(date => {
-    console.log('Calendar onDateClick');
-    // const selectedDate = moment(`${moment(month).format('YYYY-MM')}-${date}`).format();
-    // console.log('selectedDate', selectedDate, month, date);
-    
     const startAt = date;
     const endAt = ExtsDate.addHour({ date });
 
@@ -177,22 +222,19 @@ const Calendar = props => {
     setEventStartAt(startAt);
     setEventEndAt(endAt);
     setVisibleModal(true);
-  }, [month]);
+  }, []);
 
   const onEventClick = useCallback(({ date, event }) => {
     const { title, startAt, endAt } = event.toModel();
-    console.log('Calendar onEventClick', date, title, startAt, endAt);
-    // const selectedDate = moment(`${moment(month).format('YYYY-MM')}-${date}`);
+
     setEventTitle(title);
     setEventStartAt(startAt);
     setEventEndAt(endAt);
     setEventEdit(event);
     setVisibleModal(true);
-  }, [month]);
+  }, []);
 
   const onModalConfirmClick = ({ form, title, startAt, endAt }) => {
-    console.log('Calendar onModalConfirmClick', form, title, startAt, endAt);
-
     try {
       if (!eventEdit) {
         // 신규 생성시
@@ -200,25 +242,27 @@ const Calendar = props => {
         const newEvent = new EventModel({ title, startAt: moment(startAt).format(), endAt: moment(endAt).format() });
         calendarModel.addEvent(newEvent);
         setEventList(calendarModel.getEventList());
+        openNotificationSuccess({ message: '일정이 추가되었습니다.' });
       } else {
         // 수정
         calendarModel.modifyEvent(Object.assign({}, eventEdit.toModel(), { title, startAt, endAt }));
         setEventList(calendarModel.getEventList());
+        openNotificationSuccess({ message: '일정이 수정되었습니다.' });
       }
       clearModal();
     } catch (error) {
       // validate 에러 대응 처리
       switch (error.message) {
         case EVENT_INVALID_TIME_DIFF:
-          openNotificationWithIcon({ message: '입력 값을 확인하세요', description: '종료일은 시작일 이후 일자로 선택하세요.' });
+          openNotificationWarning({ message: '입력 값을 확인하세요', description: '종료일은 시작일 이후 일자로 선택하세요.' });
           break;
 
         case CALENDAR_INVALID_ADD_EVENT:
-          openNotificationWithIcon({ message: '입력 값을 확인하세요.', description: '중복되는 일정이 있습니다.' });
+          openNotificationWarning({ message: '입력 값을 확인하세요.', description: '중복되는 일정이 있습니다.' });
           break;
 
         default:
-          openNotificationWithIcon({ message: '입력 값을 확인하세요', description: '' });
+          openNotificationWarning({ message: '입력 값을 확인하세요', description: '' });
           break;
       }
     }
@@ -227,18 +271,11 @@ const Calendar = props => {
   const onModelDeleteClick = () => {
     calendarModel.deleteEvent(eventEdit);
     setEventList(calendarModel.getEventList());
-    console.log('Calendar onModelDeleteClick', calendarModel.getEventList());
     clearModal();
   }
 
-  const onModalCancelClick = () => {
-    console.log('Calendar onCancelClick');
-    clearModal();
-  }
-
-  const onModalSubmit = () => {
-    console.log('Calendar onModalSubmit');
-  }
+  const onModalCancelClick = _ => clearModal();
+  const onModalSubmit = _ => console.log('Calendar onModalSubmit');
 
   // TODO: memo 처리 가능할지, Model 연결 테스트 진행
   useEffect(() => {
@@ -253,16 +290,30 @@ const Calendar = props => {
     }
   }, []);
 
-  console.log('eventList', eventList);
-
   return (
     &lt;div className="calendar">
       &lt;ControlView 
         currentMonth={ExtsDate.format({ date: month, format: 'YYYY년 MM월' })}
-        onPrevMonthClick={onPrevMonthClick}
-        onTodayClick={onTodayClick}
-        onNextMonthClick={onNextMonthClick}
-        onViewTypeChange={onViewTypeChange}
+        currentWeek={
+          `
+          ${ExtsDate.format({
+              date: ExtsDate.startDateOfWeek({ date: week }),
+              format: 'YYYY년 MM월 DD일'
+            })
+          }
+          ~
+          ${ExtsDate.format({
+              date: ExtsDate.endDateOfWeek({ date: week }),
+              format: 'YYYY년 MM월 DD일'
+            })
+          }
+          `
+        }
+        viewType={viewType}
+        onPrevClick={onCalendarPrevClick}
+        onTodayClick={onCalendarTodayClick}
+        onNextClick={onCalendarNextClick}
+        onViewTypeChange={onCalendarViewTypeChange}
       />
 
       &lt;View 
@@ -271,6 +322,7 @@ const Calendar = props => {
         viewType={viewType}
         startDate={startDate}
         endDate={endDate}
+        week={week}
         dates={visibleDates}
         events={eventList}
         onDateClick={onDateClick}
@@ -295,15 +347,28 @@ const Calendar = props => {
   );
 }
 
+const dummyEvents = (() => {
+  const date = new Date('2020-01-01T00:00:00');
+  return Array(2).fill(1).map((_, value) => {
+    return {
+      title: `일정 - ${value}`,
+      startAt: ExtsDate.addHour({ date, value: value }),
+      endAt: ExtsDate.addHour({ date, value: value + 1 })
+    }
+  });
+
+  // return [
+  //   {
+  //     title: '12월 31일 10 ~ 11시 일정',
+  //     startAt: '2019-12-31T10:00:00+09:00',
+  //     endAt: '2019-12-31T11:00:00+09:00'
+  //   }
+  // ];
+})();
+
 Calendar.defaultProps = {
   defaultDate: new Date(),
-  events: [
-    {
-      title: '12월 31일 10 ~ 11시 일정',
-      startAt: '2019-12-31T10:00:00+09:00',
-      endAt: '2019-12-31T11:00:00+09:00'
-    }
-  ]
+  events: dummyEvents
 };
 
 export default Calendar;
@@ -322,7 +387,7 @@ export default Calendar;
 
 <footer class="footer">
     <div class="content has-text-centered">
-        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Jan 02 2020 00:15:45 GMT+0900 (GMT+09:00)</p>
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Jan 02 2020 03:28:22 GMT+0900 (GMT+09:00)</p>
         <p class="sidebar-created-by">
             <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
             <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>

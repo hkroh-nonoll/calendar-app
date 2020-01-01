@@ -90,9 +90,7 @@ export default class CalendarModel extends Model {
     }
 
     const copy = this.getEventList().slice(0);
-    console.log('matched', matched);
     copy.splice(matched, 1);
-    console.log(copy);
 
     this.setEventList(copy);
     this.sortEventList();

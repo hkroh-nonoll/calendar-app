@@ -8,7 +8,8 @@
   padding: 10px 0 0;
 }
 
-.calendar-view .calendar-header .ant-card-body {
+.calendar-view .calendar-header .ant-card-body,
+.calendar-week .calendar-header .ant-card-body {
   display: none;
 }
 
