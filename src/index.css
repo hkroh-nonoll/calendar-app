@@ -38,4 +38,11 @@
   background-color: #00a9ff;
   border-color: #00a9ff;
   padding: 2px 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.calendar-date .temp-card:hover {
+  background-color: rgba(0, 0, 0, 0.02);
 }
