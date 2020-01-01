@@ -5,7 +5,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>JSDoc: lib/models/Model.js</title>
+    <title>JSDoc: lib/constants/calendar.js</title>
 
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -54,7 +54,7 @@
                 <div class="content" id="main-content-wrapper">
                     <header class="page-title">
                         <p>Source</p>
-                        <h1>lib/models/Model.js</h1>
+                        <h1>lib/constants/calendar.js</h1>
                     </header>
                     
                     
@@ -64,87 +64,31 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { uuidv4 } from 'lib/utils/uuidv4';
+            <pre class="prettyprint source linenums"><code>import { deepFreeze } from 'lib/utils/deepFreeze';
 
 /**
- * 기본 Model Class
- * @export
- * @class Model
+ * calendar viewType 상수 정의
+ * @readonly
+ * @alias CALENDAR/VIEW_TYPE
+ * @type {object}
+ * @property {string} MONTH   월
+ * @property {string} WEEK    주
+ * @default
  */
-export default class Model {
+export const VIEW_TYPE = deepFreeze({
+  MONTH: 'MONTH',
+  WEEK: 'WEEK'
+});
 
-  /**
-   * model 고유 uuid
-   * @private
-   * @memberof Model
-   */
-  _uuid = uuidv4();
-
-  /**
-   * vo 용 데이터 객체
-   * @private
-   * @memberof Model
-   */
-  _vo = null;
-
-  /**
-   * view 용 데이터 객체
-   * @private
-   * @memberof Model
-   */
-  _view = null;
-
-  /**
-   * vo &lt;-> view 간 모델 관리용, 데이터 객체
-   * @private
-   * @memberof Model
-   */
-  _model = null;
-
-  /**
-   * vo 값을 view 로 처리할 메소드
-   * @abstract
-   * @memberof Model
-   */
-  fromVo() {
-    if (!new.target || new.target === Model) {
-      throw new Error('Model fromVo 을 override 하세요');
-    }
-  }
-
-  /**
-   * vo &lt;-> view 간 모델 관리용, 데이터 객체 처리할 메소드
-   * @abstract
-   * @memberof Model
-   */
-  toModel() {
-    if (!new.target || new.target === Model) {
-      throw new Error('Model toModel 을 override 하세요');
-    }
-  }
-
-  /**
-   * view 데이터를 vo 로 처리할 메소드
-   * @abstract
-   * @memberof Model
-   */
-  toVo() {
-    if (!new.target || new.target === Model) {
-      throw new Error('Model toVo 을 override 하세요');
-    }
-  }
-
-  /**
-   * destroy
-   * @memberof Model
-   */
-  destroy() {
-    this._uuid = null;
-    this._vo = null;
-    this._view = null;
-    this._model = null;
-  }
-}</code></pre>
+/**
+ * calendar 관련 상수 정의
+ * @readonly
+ * @alias CALENDAR
+ * @type {object}
+ */
+export default {
+  VIEW_TYPE
+};</code></pre>
         </article>
     </section>
 
