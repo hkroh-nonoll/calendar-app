@@ -1,0 +1,176 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>JSDoc: lib/constants/date.js</title>
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="./build/entry.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Muli:100,400,700|Oswald:300|Inconsolata,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+</head>
+
+<body>
+    <div id="stickyNavbarOverlay"></div>
+    <div class="top-navbar">
+        <div class="container">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    
+                    
+                        <h1 class="navbar-item">Documentation</h1>
+                    
+                    <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+                
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-3" id="sidebarNav">
+                <div class="sidebar">
+                    <nav>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="ExtsDate.html">ExtsDate</a></li></ul><h3>Global</h3><ul><li><a href="global.html#DATE">DATE</a></li><li><a href="global.html#DATE/DAY_NAME_WEEK">DATE/DAY_NAME_WEEK</a></li><li><a href="global.html#DATE/MAX_DATES">DATE/MAX_DATES</a></li><li><a href="global.html#DATE/START_DAY_WEEK">DATE/START_DAY_WEEK</a></li><li><a href="global.html#DATE/UNIT">DATE/UNIT</a></li><li><a href="global.html#DATE/WEEK_SIZE">DATE/WEEK_SIZE</a></li><li><a href="global.html#deepFreeze">deepFreeze</a></li><li><a href="global.html#getFullName">getFullName</a></li><li><a href="global.html#User">User</a></li></ul></div>
+                    </nav>
+                </div>
+            </div>
+            <div class="column is-9-desktop">
+                <div class="content" id="main-content-wrapper">
+                    <header class="page-title">
+                        <p>Source</p>
+                        <h1>lib/constants/date.js</h1>
+                    </header>
+                    
+                    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { deepFreeze } from '../utils/deepFreeze';
+
+/**
+ * unit 상수 정의
+ * @readonly
+ * @alias DATE/UNIT
+ * @type {object}
+ * @property {string} MONTH   월
+ * @property {string} WEEK    주
+ * @property {string} DAY     일
+ * @default
+ */
+export const UNIT = deepFreeze({
+  MONTH: 'MONTH', // 월
+  WEEK: 'WEEK',   // 주
+  DATE: 'DATE',   // 일
+  HOUR: 'HOUR'
+});
+
+/**
+ * 요일명 상수 정의
+ * @readonly
+ * @alias DATE/DAY_NAME_WEEK
+ * @type {array}
+ * @property {string} 0 - 일
+ * @property {string} 1 - 월
+ * @property {string} 2 - 화
+ * @property {string} 3 - 수
+ * @property {string} 4 - 목
+ * @property {string} 5 - 금
+ * @property {string} 6 - 토
+ * @default ['일', '월', '화', '수', '목', '금', '토']
+ */
+export const DAY_NAME_WEEK = deepFreeze(['일', '월', '화', '수', '목', '금', '토']);
+
+/**
+ * 요일 시작 index 값 상수 정의
+ * @readonly
+ * @alias DATE/START_DAY_WEEK
+ * @type {array}
+ * @property {number} 0 - 일
+ * @property {number} 1 - 월
+ * @property {number} 2 - 화
+ * @property {number} 3 - 수
+ * @property {number} 4 - 목
+ * @property {number} 5 - 금
+ * @property {number} 6 - 토
+ * @default [0, 1, 2, 3, 4, 5, 6]
+ */
+export const START_DAY_WEEK = deepFreeze([0, 1, 2, 3, 4, 5, 6]);
+
+/**
+ * 주당 요일수
+ * @readonly
+ * @alias DATE/WEEK_SIZE
+ * @type {number}
+ * @default 7
+ */
+export const WEEK_SIZE = 7;
+
+/**
+ * 최대 월 일자수 - WEEK_SIZE(주당 요일수) * 6주
+ * @readonly
+ * @alias DATE/MAX_DATES
+ * @type {number}
+ * @default 42
+ */
+export const MAX_DATES = WEEK_SIZE * 6;
+
+
+/**
+ * date 관련 상수 정의
+ * @readonly
+ * @alias DATE
+ * @type {object}
+ */
+export default {
+  UNIT,
+  DAY_NAME_WEEK,
+  START_DAY_WEEK,
+  WEEK_SIZE,
+  MAX_DATES
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Jan 01 2020 00:01:00 GMT+0900 (GMT+09:00)</p>
+        <p class="sidebar-created-by">
+            <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+            <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+        </p>
+    </div>
+</footer>
+
+
+<script src="scripts/app.min.js"></script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

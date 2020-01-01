@@ -57,7 +57,7 @@ const ControlView = props => {
 }
 
 ControlView.defaultProps = {
-  currentMonth: '2019년 12월',
+  currentMonth: 'YYYY년 MM월',
   viewType: 'month',
   onPrevMonthClick: () => {},
   onTodayClick: () => {},

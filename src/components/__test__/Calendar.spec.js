@@ -1,10 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import Root from 'client/Root';
+import Calendar from 'components/calendar/Calendar';
 
 test('renders learn react link', () => {
-  const { getByText } = render(<Root />);
-  const linkElement = getByText(/calendar/i);
+  const { getByText } = render(<Calendar />);
+  const linkElement = getByText(/2020년/i);
   expect(linkElement).toBeInTheDocument();
 });
 

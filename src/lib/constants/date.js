@@ -13,7 +13,8 @@ import { deepFreeze } from '../utils/deepFreeze';
 export const UNIT = deepFreeze({
   MONTH: 'MONTH', // 월
   WEEK: 'WEEK',   // 주
-  DATE: 'DATE'    // 일
+  DATE: 'DATE',   // 일
+  HOUR: 'HOUR'
 });
 
 /**
@@ -51,20 +52,22 @@ export const START_DAY_WEEK = deepFreeze([0, 1, 2, 3, 4, 5, 6]);
 /**
  * 주당 요일수
  * @readonly
- * @alias DATE/WEEK
+ * @alias DATE/WEEK_SIZE
  * @type {number}
  * @default 7
  */
-export const WEEK = 7;
+export const WEEK_SIZE = 7;
 
 /**
- * 최대 월 일자수 - WEEK(주당 요일수) * 6주
+ * 최대 월 일자수 - WEEK_SIZE(주당 요일수) * 6주
  * @readonly
  * @alias DATE/MAX_DATES
  * @type {number}
  * @default 42
  */
-export const MAX_DATES = 7 * 6;
+export const MAX_DATES = WEEK_SIZE * 6;
+
+export const DAY_MILLISECONDS = 86400000;
 
 
 /**
@@ -77,6 +80,7 @@ export default {
   UNIT,
   DAY_NAME_WEEK,
   START_DAY_WEEK,
-  WEEK,
-  MAX_DATES
+  WEEK_SIZE,
+  MAX_DATES,
+  DAY_MILLISECONDS
 };
