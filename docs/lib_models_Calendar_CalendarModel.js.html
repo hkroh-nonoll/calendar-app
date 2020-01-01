@@ -1,9 +1,11 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: lib/models/Calendar/CalendarModel.js</title>
 
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -51,8 +53,8 @@
             <div class="column is-9-desktop">
                 <div class="content" id="main-content-wrapper">
                     <header class="page-title">
-                        <p>Title</p>
-                        <h1>Home</h1>
+                        <p>Source</p>
+                        <h1>lib/models/Calendar/CalendarModel.js</h1>
                     </header>
                     
                     
@@ -60,65 +62,189 @@
 
 
     
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
     <section>
-        <article><p>This project was bootstrapped with <a href="https://github.com/facebook/create-react-app">Create React App</a>.</p>
-<h2>Available Scripts</h2>
-<p>In the project directory, you can run:</p>
-<h3><code>yarn start</code></h3>
-<p>Runs the app in the development mode.<br />
-Open <a href="http://localhost:3000">http://localhost:3000</a> to view it in the browser.</p>
-<p>The page will reload if you make edits.<br />
-You will also see any lint errors in the console.</p>
-<h3><code>yarn test</code></h3>
-<p>Launches the test runner in the interactive watch mode.<br />
-See the section about <a href="https://facebook.github.io/create-react-app/docs/running-tests">running tests</a> for more information.</p>
-<h3><code>yarn build</code></h3>
-<p>Builds the app for production to the <code>build</code> folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.</p>
-<p>The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!</p>
-<p>See the section about <a href="https://facebook.github.io/create-react-app/docs/deployment">deployment</a> for more information.</p>
-<h3><code>yarn eject</code></h3>
-<p><strong>Note: this is a one-way operation. Once you <code>eject</code>, you can’t go back!</strong></p>
-<p>If you aren’t satisfied with the build tool and configuration choices, you can <code>eject</code> at any time. This command will remove the single build dependency from your project.</p>
-<p>Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except <code>eject</code> will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.</p>
-<p>You don’t have to ever use <code>eject</code>. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.</p>
-<h2>Learn More</h2>
-<p>You can learn more in the <a href="https://facebook.github.io/create-react-app/docs/getting-started">Create React App documentation</a>.</p>
-<p>To learn React, check out the <a href="https://reactjs.org/">React documentation</a>.</p>
-<h3>Code Splitting</h3>
-<p>This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting</p>
-<h3>Analyzing the Bundle Size</h3>
-<p>This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size</p>
-<h3>Making a Progressive Web App</h3>
-<p>This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app</p>
-<h3>Advanced Configuration</h3>
-<p>This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration</p>
-<h3>Deployment</h3>
-<p>This section has moved here: https://facebook.github.io/create-react-app/docs/deployment</p>
-<h3><code>yarn build</code> fails to minify</h3>
-<p>This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify</p></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>import Model from 'lib/models/Model';
+import EventModel from 'lib/models/Calendar/EventModel';
+import { CALENDAR_INVALID_ADD_EVENT, CALENDAR_INVALID_MATCHED_EVENT, EVENT_INVALID_TIME_DIFF } from 'lib/constants/errorTypes';
+
+/**
+ * Calendar Model class&lt;br/>
+ * Calendar data 관리
+ * @export
+ * @class CalendarModel
+ * @extends {Model}
+ */
+export default class CalendarModel extends Model {
+  constructor() {
+    super();
+
+    this._events = [];
+  }
+
+  addEvent(eventData) {
+    const isEventModel = eventData instanceof EventModel;
+
+    let event;
+    if (!isEventModel) {
+      event = new EventModel(eventData);
+    } else {
+      event = eventData;
+    }
+
+    if (!event.validateDiff()) {
+      throw new Error(EVENT_INVALID_TIME_DIFF);
+    }
+
+    if (!this.isValidEventList(event)) {
+      throw new Error(CALENDAR_INVALID_ADD_EVENT);
+    }
+
+    this._events.push(event);
+    this.sortEventList();
+
+    return this;
+  }
+
+  modifyEvent(eventData) {
+    const isEventModel = eventData instanceof EventModel;
+
+    let event;
+    if (!isEventModel) {
+      event = new EventModel(eventData);
+    } else {
+      event = eventData;
+    }
+
+    const matched = this.getEventList().findIndex(data => data.toModel().uuid === event.toModel().uuid);
+
+    if (!(~matched)) {
+      throw new Error(CALENDAR_INVALID_MATCHED_EVENT);
+    }
+
+    if (!event.validateDiff()) {
+      throw new Error(EVENT_INVALID_TIME_DIFF);
+    }
+
+    if (!this.isValidEventList(event)) {
+      throw new Error(CALENDAR_INVALID_ADD_EVENT);
+    }
+
+    const copy = this.getEventList().slice(0);
+    copy.splice(matched, 1, event);
+
+    this.setEventList(copy);
+    this.sortEventList();
+
+    return this;
+  }
+
+  deleteEvent(eventData) {
+    const isEventModel = eventData instanceof EventModel;
+
+    let event;
+    if (!isEventModel) {
+      event = new EventModel(eventData);
+    } else {
+      event = eventData;
+    }
+
+    const matched = this.getEventList().findIndex(data => data.toModel().uuid === event.toModel().uuid);
+
+    if (!(~matched)) {
+      throw new Error(CALENDAR_INVALID_MATCHED_EVENT);
+    }
+
+    const copy = this.getEventList().slice(0);
+    console.log('matched', matched);
+    copy.splice(matched, 1);
+    console.log(copy);
+
+    this.setEventList(copy);
+    this.sortEventList();
+
+    return this;
+  }
+
+  isValidEventList(newEvent) {
+    let { startAt: newStartAt, endAt: newEndAt, uuid: newUuid } = newEvent.toModel();
+    newStartAt = +new Date(newStartAt);
+    newEndAt = +new Date(newEndAt);
+
+    const events = this.getEventList();
+    const isValid = (events || []).every(event => {
+      let { startAt, endAt, uuid } = event.toModel();
+      startAt = +new Date(startAt);
+      endAt = +new Date(endAt);
+
+      if (uuid === newUuid) {
+        return true;
+      }
+
+      if (newStartAt >= startAt &amp;&amp; newStartAt &lt;= endAt) {
+        return false;
+      }
+
+      if (newEndAt >= startAt &amp;&amp; newEndAt &lt;= endAt) {
+        return false;
+      }
+
+      return true;
+    });
+
+    return isValid;
+  }
+
+  setEventList(events) {
+    // const isVaild = (events || []).every(event => this.isValidEventList(event));
+    // if (isVaild) {
+    //   this._events = events;
+    // }
+    this._events = events;
+    return this;
+  }
+
+  getEventList() {
+    return this._events;
+  }
+
+  /**
+   * 시간순으로 정렬
+   * @returns {CalendarModel}
+   * @memberof CalendarModel
+   */
+  sortEventList() {
+    this._events.sort((a, b) => {
+      const { startAt: aStart } = a.toModel();
+      const { startAt: bStart } = b.toModel();
+      return (+new Date(aStart)) - (+new Date(bStart));
+    });
+    return this;
+  }
+
+  static toEvents(events) {
+    return (events || [])
+      .map(event => new EventModel(event))
+      .filter(event => event);
+  }
+
+  fromVo(vo) {
+    return this.toEvents(vo);
+  }
+
+  toModel() {
+    return this._model;
+  }
+
+  toVo() {
+    return '';
+  }
+
+  destroy() {}
+}
+</code></pre>
+        </article>
     </section>
-
-
 
 
 
