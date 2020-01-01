@@ -99,7 +99,7 @@ class ExtsDate {
    * @memberof ExtsDate
    */
   static addWeek({ date = new Date(), value = 1 }) {
-    return ExtsDate.add({ date, value: value * 7, unit: UNIT.WEEK });
+    return ExtsDate.add({ date, value: value * 6, unit: UNIT.WEEK });
   }
 
   /**
@@ -129,7 +129,7 @@ class ExtsDate {
    * @static
    * @param {object} { date = new Date() }
    * @returns {Date}
-   * @memberof KDate
+   * @memberof ExtsDate
    */
   static startDateOfMonth({ date = new Date() }) {
     const startDate = new Date(date);
@@ -143,19 +143,20 @@ class ExtsDate {
    * @static
    * @param {object} { date = new Date() }
    * @returns {number}
-   * @memberof KDate
+   * @memberof ExtsDate
    */
   static startDayOfMonth({ date = new Date() }) {
     const startDate = ExtsDate.startDateOfMonth(date);
     return startDate.getDay();
   }
+  
 
   /**
    * 월의 마지막날, Date 객체 반환
    * @static
    * @param {object} { date = new Date() }
    * @returns {Date}
-   * @memberof KDate
+   * @memberof ExtsDate
    */
   static endOfMonth({ date = new Date() }) {
     const dt = new Date(date);
@@ -228,6 +229,34 @@ class ExtsDate {
       cursor = ExtsDate.addDate({ date: cursor, value: 1 });
     });
     return monthArray;
+  }
+
+
+  /**
+   * 주의 시작일 반환
+   * @static
+   * @param {object} { date = new Date() }
+   * @returns {Date}
+   * @memberof ExtsDate
+   */
+  static startDateOfWeek({ date = new Date() }) {
+    const startDate = new Date(date);
+    startDate.setDate(startDate.getDate() - startDate.getDay());
+    startDate.setHours(0, 0, 0, 0);  
+    return startDate;
+  }
+  
+  /**
+   * 주의 마지막일 반환
+   * @static
+   * @param {object} { date = new Date() }
+   * @returns {Date}
+   * @memberof ExtsDate
+   */
+  static endDateOfWeek({ date = new Date() }) {
+    const endDate = ExtsDate.startDateOfWeek(date);
+    endDate.setDate(endDate.getDate() + 6);
+    return endDate;
   }
 }
 
