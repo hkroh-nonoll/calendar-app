@@ -43,6 +43,7 @@ const TempEvent = props => {
       draggable="true"
       onDragStart={dragStart}
       onDragEnd={dragEnd}
+      title={title}
     >{ title }</div>
   );
 }
