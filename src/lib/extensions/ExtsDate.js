@@ -1,4 +1,4 @@
-import { UNIT, WEEK_SIZE, MAX_DATES, START_DAY_WEEK } from '../constants/date';
+import { UNIT, WEEK_SIZE, MAX_HOURS, MAX_DATES, START_DAY_WEEK } from '../constants/date';
 
 /**
  * Date / DateTime 처리용 class 
@@ -37,8 +37,16 @@ class ExtsDate {
     const dt = new Date(date);
     const year = dt.getFullYear();
     const month = `${dt.getMonth() + 1}`.padStart(2, '0');
+
+    // https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
+
+    if (format === 'YYYY년 MM월 DD일') {
+      const date = `${dt.getDate()}`.padStart(2, '0');
+      return `${year}년 ${month}월 ${date}일`;
+    } else {
+      return `${year}년 ${month}월`;
+    }
     
-    return `${year}년 ${month}월`;
   }
 
   /**
@@ -99,7 +107,7 @@ class ExtsDate {
    * @memberof ExtsDate
    */
   static addWeek({ date = new Date(), value = 1 }) {
-    return ExtsDate.add({ date, value: value * 6, unit: UNIT.WEEK });
+    return ExtsDate.add({ date, value: value * 7, unit: UNIT.WEEK });
   }
 
   /**
@@ -254,9 +262,41 @@ class ExtsDate {
    * @memberof ExtsDate
    */
   static endDateOfWeek({ date = new Date() }) {
-    const endDate = ExtsDate.startDateOfWeek(date);
+    const endDate = ExtsDate.startDateOfWeek({ date });
     endDate.setDate(endDate.getDate() + 6);
     return endDate;
+  }
+
+  /**
+   * 주의 시작일 ~ 마지막일을 기준으로, 0 ~ 24시 단위로 구성되도록하여 배열로 반환
+   * @static
+   * @param {object} { date = new Date() }
+   * @returns {Array}
+   * @memberof ExtsDate
+   * @example
+   * ```javascript
+   * import ExtsDate from 'lib/extensions/ExtsDate';
+   * const weekToArray = ExtsDate.weekToArray({ date: '2019-12-31' });
+   * console.table(weekToArray);
+   * ```
+   */
+  static weekToArray({ date = new Date() }) {
+    const start = ExtsDate.startDateOfWeek({ date });
+    const startIndex = START_DAY_WEEK.findIndex(v => v === start.getDay());
+
+    const weekArray = [];
+    let cursor = ExtsDate.addDate({ date: start, value: -startIndex });
+    let hour;
+
+    Array(MAX_HOURS * WEEK_SIZE).fill(0).forEach((_, index) => {
+      if (!(index % MAX_HOURS)) {
+        hour = weekArray[Math.round(index / MAX_HOURS)] = [];
+        cursor = ExtsDate.addDate({ date: cursor, value: 1 });
+      }
+      hour.push(cursor);
+      cursor = ExtsDate.addHour({ date: cursor, value: 1 });
+    });
+    return weekArray;
   }
 }
 

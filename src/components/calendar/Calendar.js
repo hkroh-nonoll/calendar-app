@@ -51,46 +51,100 @@ const Calendar = props => {
   const { defaultDate, events } = props;
 
   const [month, setMonth] = useState(defaultDate);
-  const [week] = useState(defaultDate);
+  const [week, setWeek] = useState(ExtsDate.startDateOfWeek({ date: defaultDate }));
   const [startDate, setStartDate] = useState(ExtsDate.startDateOfMonth({ date: month }));
   const [endDate, setEndDate] = useState(ExtsDate.endOfMonth({ date: month }));
-  const [viewType, setViewType] = useState(VIEW_TYPE.MONTH);
+  const [viewType, setViewType] = useState(VIEW_TYPE.WEEK);
   const [visibleModal, setVisibleModal] = useState(false);
   const [eventTitle, setEventTitle] = useState(null);
   const [eventStartAt, setEventStartAt] = useState(null);
   const [eventEndAt, setEventEndAt] = useState(null);
   const [eventEdit, setEventEdit] = useState(null);
-  const [visibleDates, setVisibleDates] = useState(ExtsDate.monthToArray({ date: month }));
+  const [visibleDates, setVisibleDates] = useState(
+    viewType === VIEW_TYPE.MONTH 
+    ? ExtsDate.monthToArray({ date: month })
+    : ExtsDate.weekToArray(week)
+  );
   const [eventList, setEventList] = useState([]);
 
-  const updateMonth = month => {
-    const date = month;
-    setStartDate(ExtsDate.startDateOfMonth({ date }));
-    setEndDate(ExtsDate.endOfMonth({ date }));
-    setVisibleDates(ExtsDate.monthToArray({ date }));
-    setMonth(month);
-  }
+  const updateMonth = date => {
+    const changeMonth = { date };
+    setStartDate(ExtsDate.startDateOfMonth(changeMonth));
+    setEndDate(ExtsDate.endOfMonth(changeMonth));
+    setVisibleDates(ExtsDate.monthToArray(changeMonth));
+    setMonth(date);
+    setWeek(ExtsDate.startDateOfWeek(changeMonth));
+  };
+
+  const updateWeek = date => {
+    const changeWeek = { date };
+    setStartDate(ExtsDate.startDateOfMonth(changeWeek));
+    setEndDate(ExtsDate.endOfMonth(changeWeek));
+    setVisibleDates(ExtsDate.weekToArray(changeWeek));
+    setMonth(date);
+    setWeek(ExtsDate.startDateOfWeek(changeWeek));
+  };
 
   const clearModal = _ => {
     setEventEdit(null);
     setVisibleModal(false);
   }
 
-  const onPrevMonthClick = useCallback(_ => {
-    const prevMonth = ExtsDate.addMonth({ date: month, value: -1 });
-    updateMonth(prevMonth);
-  }, [month]);
+  const onCalendarPrevClick = useCallback(_ => {
+    switch (viewType) {
+      case VIEW_TYPE.WEEK:
+        const prevWeek = ExtsDate.addWeek({ date: week, value: -1 });
+        updateWeek(prevWeek);
+        break;
 
-  const onTodayClick = useCallback(_ => {
-    updateMonth(defaultDate);
-  }, [defaultDate]);
+      case VIEW_TYPE.MONTH:
+      default:
+        const prevMonth = ExtsDate.addMonth({ date: month, value: -1 });
+        updateMonth(prevMonth);
+        break;
+    }
+  }, [month, week, viewType]);
 
-  const onNextMonthClick = useCallback(_ => {
-    const nextMonth = ExtsDate.addMonth({ date: month, value: 1 });
-    updateMonth(nextMonth);
-  }, [month]);
+  const onCalendarTodayClick = useCallback(_ => {
+    switch (viewType) {
+      case VIEW_TYPE.WEEK:
+        updateWeek(defaultDate);
+        break;
 
-  const onViewTypeChange = useCallback(value => {
+      case VIEW_TYPE.MONTH:
+      default:
+        updateMonth(defaultDate);
+        break;
+    }
+  }, [defaultDate, month, week, viewType]);
+
+  const onCalendarNextClick = useCallback(_ => {
+    switch (viewType) {
+      case VIEW_TYPE.WEEK:
+      default:
+        const nextWeek = ExtsDate.addWeek({ date: week, value: 1 });
+        console.log('nextWeek', nextWeek);
+        updateWeek(nextWeek);
+        break;
+
+      case VIEW_TYPE.MONTH:
+        const nextMonth = ExtsDate.addMonth({ date: month, value: 1 });
+        updateMonth(nextMonth);
+        break;
+    }
+  }, [month, week, viewType]);
+
+  const onCalendarViewTypeChange = useCallback(value => {
+    switch (value) {
+      case VIEW_TYPE.WEEK:
+        updateWeek(week);
+        break;
+
+      case VIEW_TYPE.MONTH:
+      default:
+        updateMonth(month);
+        break;
+    }
     setViewType(value);
   }, []);
 
@@ -174,10 +228,26 @@ const Calendar = props => {
     <div className="calendar">
       <ControlView 
         currentMonth={ExtsDate.format({ date: month, format: 'YYYY년 MM월' })}
-        onPrevMonthClick={onPrevMonthClick}
-        onTodayClick={onTodayClick}
-        onNextMonthClick={onNextMonthClick}
-        onViewTypeChange={onViewTypeChange}
+        currentWeek={
+          `
+          ${ExtsDate.format({
+              date: ExtsDate.startDateOfWeek({ date: week }),
+              format: 'YYYY년 MM월 DD일'
+            })
+          }
+          ~
+          ${ExtsDate.format({
+              date: ExtsDate.endDateOfWeek({ date: week }),
+              format: 'YYYY년 MM월 DD일'
+            })
+          }
+          `
+        }
+        viewType={viewType}
+        onPrevClick={onCalendarPrevClick}
+        onTodayClick={onCalendarTodayClick}
+        onNextClick={onCalendarNextClick}
+        onViewTypeChange={onCalendarViewTypeChange}
       />
 
       <View 

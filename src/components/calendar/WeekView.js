@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from 'react';
 
-import { Row, Col, Card } from 'antd';
+import { Card, Row, Col } from 'antd';
 
-const WeekViewHeader = () => {
-  return (
-    <Row className="calendar-header" type="flex" justify="start" align="top">
-      {['시간', '일', '월', '화', '수', '목', '금', '토'].map((day, index) => {
-        return (
-          <Col span={3} key={`day-${index}`}>
-            <Card title={day} bordered={false}></Card>
-          </Col>
-        );
-      })}
-    </Row>
-  );
-}
+import WeekViewHeader from 'components/calendar/WeekViewHeader';
 
+// import EventModel from 'lib/models/Calendar/EventModel';
+import WeekViewList from './WeekViewList';
 
-const WeekView = () => {
+const WeekView = props => {
+  const { dates, startDate, endDate, onDateClick, onEventClick, events } = props;
+
+  const handleDateClick = date => onDateClick(date);
+  const handleEventClick = ({ date, event }) => onEventClick({ date, event });
+  const dragOver = e => {
+    // console.log('dragOver', e);
+  }
+
   const [hourMarkerPos, setHourMarkerPos] = useState(0);
   const maxDayMilliseconds = 86400000;
   const renderDuration = 1000 * 1;
@@ -36,27 +34,14 @@ const WeekView = () => {
     borderTop: '1px dashed #515ce6'
   };
 
-  const getTimeInfo = (_date = new Date()) => {
-    return {
-      _date,
-      year: _date.getFullYear(),
-      month: _date.getMonth(),
-      date: _date.getDate(),
-      hour: _date.getHours(),
-      minute: _date.getMinutes(),
-      second: _date.getSeconds(),
-      time: _date.getTime()
-    };
-  }
-
   const getMillisecondsByDay = (hour, minute, second) => {
     return (hour * 60 * 60 * 1000) + (minute * 60 * 1000) + (second * 1000);
   }
 
   useEffect(() => {
     const hourMarkerRender = () => {
-      const currentTime = getTimeInfo();
-      const { hour, minute, second } = currentTime;
+      const date = new Date();
+      const [hour, minute, second] = [date.getHours(), date.getMinutes(), date.getSeconds()];
       const currentDayMilliseconds = getMillisecondsByDay(hour, minute, second);
       const percent = (currentDayMilliseconds / maxDayMilliseconds * 100).toFixed(2);
       setHourMarkerPos(`${percent}%`);
@@ -70,36 +55,37 @@ const WeekView = () => {
     <div className="calendar-week">
       <WeekViewHeader />
       <Col type="flex" justify="start" align="top">
-        {Array(24).fill(1).map((_, index) => {
-          return (
-            <Row key={`time-${index}`} type="flex" justify="start" align="top">
-              <Col span={3}>
-                <Card bordered={false}>{index}</Card>
-              </Col>
-              <Col span={3}>
-                <Card bordered={false}>일정 {index}</Card>
-              </Col>
-              <Col span={3}>
-                <Card bordered={false}>일정 {index}</Card>
-              </Col>
-              <Col span={3}>
-                <Card bordered={false}>일정 {index}</Card>
-              </Col>
-              <Col span={3}>
-                <Card bordered={false}>일정 {index}</Card>
-              </Col>
-              <Col span={3}>
-                <Card bordered={false}>일정 {index}</Card>
-              </Col>
-              <Col span={3}>
-                <Card bordered={false}>일정 {index}</Card>
-              </Col>
-              <Col span={3}>
-                <Card bordered={false}>일정 {index}</Card>
-              </Col>
-            </Row>
-          );
-        })}
+         <div onDragOver={dragOver}>
+          <Row type="flex" justify="start" align="top">
+            <Col span={3}>
+              {Array(24).fill(1).map((_, index) => {
+                const time = `${index}`.padStart(2, '0');
+                return (
+                  <Row key={`time-${index}`} className="calendar-date__event" type="flex" justify="start" align="top">
+                    <Col span={24}>
+                      <Card>{`${time}:00`}</Card>
+                    </Col>
+                  </Row>
+                );
+              })}
+            </Col>
+            {dates.map((week, index) => {
+              return (
+                <Col key={`time-${index}`} span={3}>
+                  <WeekViewList key={`list-${index}`} 
+                    useStartDay={index === 0}
+                    startDate={startDate}
+                    endDate={endDate}
+                    week={week}
+                    events={events}
+                    viewDateClick={handleDateClick}
+                    viewEventClick={handleEventClick}
+                  />
+                </Col>
+              );
+            })}
+          </Row>
+        </div>
         <div style={{ ...hourMarkerStyle, top: hourMarkerPos }}>
           <div style={lineStyle}><span className="blind">Today</span></div>
           {/* 
