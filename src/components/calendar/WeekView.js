@@ -114,6 +114,9 @@ const WeekView = () => {
   );
 }
 
-WeekView.defaultProps = {}
+WeekView.defaultProps = {
+  onDateClick: () => {},
+  onEventClick: () => {}
+}
 
 export default WeekView;

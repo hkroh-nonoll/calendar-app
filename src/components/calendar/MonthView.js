@@ -1,166 +1,19 @@
+import PropTypes from 'prop-types';
 import React from 'react';
-import { Row, Col, Card } from 'antd';
 
-import { DAY_NAME_WEEK, DAY_MILLISECONDS } from 'lib/constants/date';
-import moment from 'moment';
+import MonthViewHeader from 'components/calendar/MonthViewHeader';
+import MonthViewList from 'components/calendar/MonthViewList';
 
-const MonthViewHeader = () => {
-  return (
-    <Row className="calendar-header" type="flex" justify="start" align="top">
-      {DAY_NAME_WEEK.map((day, index) => {
-        return (
-          <Col span={3} key={`day-${index}`}>
-            <Card title={day} bordered={false}></Card>
-          </Col>
-        );
-      })}
-    </Row>
-  );
-}
-
-const TempEvent = props => {
-  const { onEventClick, date, event } = props;
-  const { title } = event.toModel();
-
-  const handleClick = e => {
-    e.stopPropagation();
-    onEventClick({ date, event });
-  }
-
-  const dragStart = e => {
-    // e.dataTransfer.effectAllowed = 'move';
-    // e.dataTransfer.setData('text/html', this.dragged); 
-    // console.log('dragStart', e);
-  }
-  
-  const dragEnd = e => {
-    // console.log('dragEnd', e);
-  }
-
-  return (
-    <div 
-      className="temp-event"
-      onClick={handleClick}
-      draggable="true"
-      onDragStart={dragStart}
-      onDragEnd={dragEnd}
-      title={title}
-    >{title}</div>
-  );
-}
-
-const MonthViewList = props => {
-  const { useStartDay, startDate, endDate, week, viewDateClick, viewEventClick, events } = props;
-
-  const startDay = startDate.getDay();
-  const endDateTime = endDate.getTime();
-
-  const handleClick = date => {
-    console.log('MonthViewList handleClick');
-    viewDateClick(date);
-  }
-
-  const handleEventClick = (event, text) => {
-    console.log('MonthViewList handleEventClick', event, text);
-    viewEventClick(event, text);
-  }
-
-  const getEvents = (parentIndex, date, eventListner) => {
-    // events.find()
-
-    const hasEvents = events.filter(event => {
-      const dateTime = date.getTime();
-      const { startAt, endAt } = event.toModel();
-      return +new Date(startAt) >= dateTime && +new Date(endAt) <= (dateTime + DAY_MILLISECONDS);
-    });
-
-    return (
-      <>
-        {hasEvents.map(event => {
-          const { uuid } = event.toModel();
-          return (
-            <TempEvent 
-              key={uuid}
-              date={date}
-              event={event}
-              onEventClick={eventListner}
-            />
-          );
-        })}
-      </>
-    );
-
-    // const max = 5;
-    // const min = 1;
-    // const size = Math.floor(Math.random()*(max-min+1)) + min;
-    // return Array(size).fill(1).map((_, index) => {
-    //   return (
-    //     <TempEvent key={`temp-event-${parentIndex}-${index}`} text={`일정 ${parentIndex}-${index}`} date={date} onEventClick={eventListner} />
-    //   );
-    // });
-  }
-
-  return (
-    <Row className="calendar-date" type="flex" justify="start" align="top">
-      {week.map((day, index) => {
-        const value = day.getDate();
-        const prevDate = (useStartDay && index < startDay);
-        const isDimmed = day.getTime() > endDateTime || prevDate;
-        const listener = _ => handleClick(day);
-        const eventListner = (event, text) => handleEventClick(event, text);
-        const event = getEvents(index, day, eventListner);
-
-        // FIXME: 임시 처리
-        const isToday = moment(new Date()).format('YYYY-MM-DD') === moment(day).format('YYYY-MM-DD')
-        const dateClassName = (() => {
-          let className = '';
-          className += isDimmed ? 'is-dimmed' : '';
-          className += isToday ? 'temp-today' : '';
-          return className;
-        })();
-
-        return (
-          <Col 
-            key={`view-${day}`}
-            span={3}
-            className={dateClassName}
-            onClick={listener}
-          >
-            <Card className="temp-card" title={value} bordered={false}>{ event }</Card>
-          </Col>
-        );
-      })}
-    </Row>
-  );
-}
-
-MonthViewList.defaultProps = {
-  startDate: 1,
-  endDate: 31,
-  events: [],
-  viewDateClick: () => {},
-  viewEventClick: () => {}
-}
+import EventModel from 'lib/models/Calendar/EventModel';
 
 const MonthView = props => {
   const { dates, startDate, endDate, onDateClick, onEventClick, events } = props;
 
-  const handleDateClick = date => {
-    console.log('MonthView handleDateClick', date);
-    onDateClick(date);
-  }
-
-  const handleEventClick = ({ date, event }) => {
-    console.log('MonthView handleEventClick', date, event);
-    onEventClick({ date, event });
-  }
-
+  const handleDateClick = date => onDateClick(date);
+  const handleEventClick = ({ date, event }) => onEventClick({ date, event });
   const dragOver = e => {
     // console.log('dragOver', e);
   }
-
-
-  // const weeks = Array(6).fill(1).map((value, index) => value + (index * 7));
 
   return (
     <div className="calendar-view">
@@ -180,15 +33,21 @@ const MonthView = props => {
           );
         })}
       </div>
-      {/* <DatePicker /> */}
     </div>
   );
 }
 
+MonthView.propTypes = {
+  currentMonth: PropTypes.instanceOf(Date).isRequired,
+  startDate: PropTypes.instanceOf(Date).isRequired,
+  endDate: PropTypes.instanceOf(Date).isRequired,
+  dates: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.instanceOf(Date))).isRequired,
+  events: PropTypes.arrayOf(PropTypes.instanceOf(EventModel)).isRequired,
+  onDateClick: PropTypes.func,
+  onEventClick: PropTypes.func,
+};
+
 MonthView.defaultProps = {
-  startDate: 1,
-  endDate: 31,
-  events: [],
   onDateClick: () => {},
   onEventClick: () => {}
 }
