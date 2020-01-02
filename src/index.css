@@ -1,11 +1,11 @@
-
+/* text blind */
 .blind {
   position: absolute;
   text-indent: -9999px;
 }
 
-.calendar-view {
-  padding: 10px 0 0;
+.calendar {
+  padding: 10px;
 }
 
 .calendar-view .calendar-header .ant-card-body,
@@ -21,6 +21,10 @@
 .calendar-date__event .ant-card-body {
   min-height: calc(24 * 5px);
   padding: 2px;
+}
+
+.calendar-week .calendar-date__event .ant-card-body {
+  padding: 0;
 }
 
 .calendar-date .calendar-date__event:hover {
@@ -44,4 +48,22 @@
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
+}
+
+.calendar-week .calendar-event {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  margin: 0px;
+  padding: 2px;
+}
+
+.current-time {
+  position: absolute;
+  height: 24px;
+  line-height: 24px;
+  color: #515ce6;
+  top: 50%;
+  right: 5px;
+  transform: translate(0, -50%);
 }

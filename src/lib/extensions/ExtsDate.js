@@ -291,7 +291,6 @@ class ExtsDate {
     Array(MAX_HOURS * WEEK_SIZE).fill(0).forEach((_, index) => {
       if (!(index % MAX_HOURS)) {
         hour = weekArray[Math.round(index / MAX_HOURS)] = [];
-        cursor = ExtsDate.addDate({ date: cursor, value: 1 });
       }
       hour.push(cursor);
       cursor = ExtsDate.addHour({ date: cursor, value: 1 });

@@ -70,13 +70,22 @@ export const MAX_HOURS = 24;
 export const MAX_DATES = WEEK_SIZE * 6;
 
 /**
+ * 1분 Milliseconds 값
+ * @readonly
+ * @alias DATE/MINUTE_MILLISECONDS
+ * @type {number}
+ * @default 60000
+ */
+export const MINUTE_MILLISECONDS = 60 * 1000;
+
+/**
  * 한시간 Milliseconds 값
  * @readonly
  * @alias DATE/HOUR_MILLISECONDS
  * @type {number}
  * @default 3600000
  */
-export const HOUR_MILLISECONDS = 3600000;
+export const HOUR_MILLISECONDS = MINUTE_MILLISECONDS * 60;
 
 /**
  * 하루 Milliseconds 값
@@ -101,6 +110,7 @@ export default {
   WEEK_SIZE,
   MAX_HOURS,
   MAX_DATES,
+  MINUTE_MILLISECONDS,
   HOUR_MILLISECONDS,
   DAY_MILLISECONDS
 };
