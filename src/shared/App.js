@@ -12,7 +12,6 @@ const App = () => {
     const { key } = e;
 
     if (key === '/jsdoc') {
-      console.log('process.env.REACT_APP_JS_DOC_URL', process.env.REACT_APP_JS_DOC_URL);
       window.open(process.env.REACT_APP_JS_DOC_URL);
       return;
     }
