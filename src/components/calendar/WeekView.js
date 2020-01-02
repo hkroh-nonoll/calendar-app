@@ -1,24 +1,51 @@
+import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 
 import { Card, Row, Col } from 'antd';
 
+import ExtsDate from 'lib/extensions/ExtsDate';
+import EventModel from 'lib/models/Calendar/EventModel';
+
 import WeekViewHeader from 'components/calendar/WeekViewHeader';
+import WeekViewList from 'components/calendar/WeekViewList';
 
-// import EventModel from 'lib/models/Calendar/EventModel';
-import WeekViewList from './WeekViewList';
-
+/**
+ * Week type 에 보여지는 View 처리
+ * 
+ * @alias components/calendar/WeekView
+ * @module components/calendar/WeekView
+ * 
+ * @requires components/calendar/WeekViewHeader
+ * @requires components/calendar/WeekViewList
+ * 
+ * @param {Object} props
+ * @param {Date} props.startDate 주의 시작일 Date 객체
+ * @param {Date} props.endDate 주의 마지막일 Date 객체
+ * @param {Array.<Date>} props.dates view 에 노출할 Date 객체
+ * @param {Array.<EventModel>} props.events view 에 노출할 events
+ * @param {Function} [props.onDateClick=(date) => {}] date 영역 클릭시
+ * @param {Function} [props.onEventClick=({ date, event }) => {}] eventView 영역 클릭시
+ * 
+ * @see EventModel
+ */
 const WeekView = props => {
-  const { dates, startDate, endDate, onDateClick, onEventClick, events } = props;
+  const {
+    startDate,
+    endDate,
+    dates,
+    events,
+    onDateClick,
+    onEventClick
+  } = props;
 
   const handleDateClick = date => onDateClick(date);
   const handleEventClick = ({ date, event }) => onEventClick({ date, event });
-  const dragOver = e => {
-    // console.log('dragOver', e);
-  }
+  const dragOver = _ => {};
 
   const [hourMarkerPos, setHourMarkerPos] = useState(0);
   const maxDayMilliseconds = 86400000;
   const renderDuration = 1000 * 1;
+
   // 23:28:21 GMT+0900 (한국 표준시) > 23:28
   const currentTime = new Date().toTimeString().replace(/.*(\d{2}:\d{2}):\d{2}.*/, '$1');
 
@@ -36,15 +63,11 @@ const WeekView = props => {
     borderTop: '1px dashed #515ce6'
   };
 
-  const getMillisecondsByDay = (hour, minute, second) => {
-    return (hour * 60 * 60 * 1000) + (minute * 60 * 1000) + (second * 1000);
-  }
-
   useEffect(() => {
     const hourMarkerRender = () => {
       const date = new Date();
       const [hour, minute, second] = [date.getHours(), date.getMinutes(), date.getSeconds()];
-      const currentDayMilliseconds = getMillisecondsByDay(hour, minute, second);
+      const currentDayMilliseconds = ExtsDate.getMillisecondsByDay({ hour, minute, second });
       const percent = (currentDayMilliseconds / maxDayMilliseconds * 100).toFixed(2);
       setHourMarkerPos(`${percent}%`);
     }
@@ -103,9 +126,19 @@ const WeekView = props => {
   );
 }
 
+
+WeekView.propTyps = {
+  startDate: PropTypes.instanceOf(Date).isRequired,
+  endDate: PropTypes.instanceOf(Date).isRequired,
+  dates: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.instanceOf(Date))).isRequired,
+  events: PropTypes.arrayOf(PropTypes.instanceOf(EventModel)).isRequired,
+  onDateClick: PropTypes.func,
+  onEventClick: PropTypes.func,
+};
+
 WeekView.defaultProps = {
   onDateClick: () => {},
   onEventClick: () => {}
-}
+};
 
 export default WeekView;

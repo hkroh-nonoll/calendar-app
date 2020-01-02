@@ -46,7 +46,7 @@
             <div class="column is-3" id="sidebarNav">
                 <div class="sidebar">
                     <nav>
-                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="CalendarModel.html">CalendarModel</a></li><li><a href="EventModel.html">EventModel</a></li><li><a href="ExtsDate.html">ExtsDate</a></li><li><a href="Model.html">Model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Calendar">Calendar</a></li><li><a href="global.html#CALENDAR">CALENDAR</a></li><li><a href="global.html#CALENDAR/VIEW_TYPE">CALENDAR/VIEW_TYPE</a></li><li><a href="global.html#DATE">DATE</a></li><li><a href="global.html#DATE/DAY_MILLISECONDS">DATE/DAY_MILLISECONDS</a></li><li><a href="global.html#DATE/DAY_NAME_WEEK">DATE/DAY_NAME_WEEK</a></li><li><a href="global.html#DATE/HOUR_MILLISECONDS">DATE/HOUR_MILLISECONDS</a></li><li><a href="global.html#DATE/MAX_DATES">DATE/MAX_DATES</a></li><li><a href="global.html#DATE/MINUTE_MILLISECONDS">DATE/MINUTE_MILLISECONDS</a></li><li><a href="global.html#DATE/START_DAY_WEEK">DATE/START_DAY_WEEK</a></li><li><a href="global.html#DATE/UNIT">DATE/UNIT</a></li><li><a href="global.html#DATE/WEEK_SIZE">DATE/WEEK_SIZE</a></li><li><a href="global.html#deepFreeze">deepFreeze</a></li><li><a href="global.html#ERROR_TYPES">ERROR_TYPES</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT">ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT">ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT</a></li><li><a href="global.html#ERROR_TYPES/EVENT_INVALID_TIME_DIFF">ERROR_TYPES/EVENT_INVALID_TIME_DIFF</a></li><li><a href="global.html#ERROR_TYPES/MODEL_ABSTRACT_METHODS_MUST_BE_OVERRIDDEN">ERROR_TYPES/MODEL_ABSTRACT_METHODS_MUST_BE_OVERRIDDEN</a></li><li><a href="global.html#uuidv4">uuidv4</a></li></ul></div>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-components.html">components</a></li><li><a href="module-components_calendar_Calendar.html">components/calendar/Calendar</a></li><li><a href="module-components_calendar_ControlView.html">components/calendar/ControlView</a></li><li><a href="module-components_calendar_EventModal.html">components/calendar/EventModal</a></li><li><a href="module-components_calendar_EventView.html">components/calendar/EventView</a></li><li><a href="module-components_calendar_MonthView.html">components/calendar/MonthView</a></li><li><a href="module-components_calendar_MonthViewHeader.html">components/calendar/MonthViewHeader</a></li><li><a href="module-components_calendar_MonthViewList.html">components/calendar/MonthViewList</a></li><li><a href="module-components_calendar_WeekView.html">components/calendar/WeekView</a></li><li><a href="module-components_calendar_WeekViewHeader.html">components/calendar/WeekViewHeader</a></li><li><a href="module-components_calendar_WeekViewList.html">components/calendar/WeekViewList</a></li><li><a href="module-components_notification.html">components/notification</a></li></ul><h3>Classes</h3><ul><li><a href="CalendarModel.html">CalendarModel</a></li><li><a href="EventModel.html">EventModel</a></li><li><a href="ExtsDate.html">ExtsDate</a></li><li><a href="Model.html">Model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CALENDAR">CALENDAR</a></li><li><a href="global.html#CALENDAR/VIEW_TYPE">CALENDAR/VIEW_TYPE</a></li><li><a href="global.html#DATE">DATE</a></li><li><a href="global.html#DATE/DAY_MILLISECONDS">DATE/DAY_MILLISECONDS</a></li><li><a href="global.html#DATE/DAY_NAME_WEEK">DATE/DAY_NAME_WEEK</a></li><li><a href="global.html#DATE/HOUR_MILLISECONDS">DATE/HOUR_MILLISECONDS</a></li><li><a href="global.html#DATE/MAX_DATES">DATE/MAX_DATES</a></li><li><a href="global.html#DATE/MAX_HOURS">DATE/MAX_HOURS</a></li><li><a href="global.html#DATE/MINUTE_MILLISECONDS">DATE/MINUTE_MILLISECONDS</a></li><li><a href="global.html#DATE/START_DAY_WEEK">DATE/START_DAY_WEEK</a></li><li><a href="global.html#DATE/UNIT">DATE/UNIT</a></li><li><a href="global.html#DATE/WEEK_SIZE">DATE/WEEK_SIZE</a></li><li><a href="global.html#deepFreeze">deepFreeze</a></li><li><a href="global.html#ERROR_TYPES">ERROR_TYPES</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT">ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT">ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT</a></li><li><a href="global.html#ERROR_TYPES/EVENT_INVALID_TIME_DIFF">ERROR_TYPES/EVENT_INVALID_TIME_DIFF</a></li><li><a href="global.html#ERROR_TYPES/MODEL_ABSTRACT_METHODS_MUST_BE_OVERRIDDEN">ERROR_TYPES/MODEL_ABSTRACT_METHODS_MUST_BE_OVERRIDDEN</a></li><li><a href="global.html#uuidv4">uuidv4</a></li></ul></div>
                     </nav>
                 </div>
             </div>
@@ -64,7 +64,7 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { UNIT, WEEK_SIZE, MAX_HOURS, MAX_DATES, START_DAY_WEEK } from '../constants/date';
+            <pre class="prettyprint source linenums"><code>import { UNIT, WEEK_SIZE, MAX_HOURS, MAX_DATES, START_DAY_WEEK } from 'lib/constants/date';
 
 /**
  * Date / DateTime 처리용 class 
@@ -73,11 +73,25 @@
 class ExtsDate {
 
   /**
+   * Date 의 hour, minute, second 를 ms 기준으로 반환
+   * @static
+   * @param {Object} data
+   * @param {Number} data.hour 시
+   * @param {Number} data.minute 분
+   * @param {Number} data.second 초
+   * @returns {Number}
+   * @memberof ExtsDate
+   */
+  static getMillisecondsByDay = ({ hour = 0, minute = 0, second = 0}) => {
+    return (hour * 60 * 60 * 1000) + (minute * 60 * 1000) + (second * 1000);
+  }
+
+  /**
    * after - before 으로 값 비교하여 반환
    * @static
-   * @param {string | Date} before
-   * @param {string | Date} after
-   * @returns {number}
+   * @param {String | Date} before 이전 시간
+   * @param {String | Date} after 이후 시간
+   * @returns {Number}
    * @memberof ExtsDate
    */
   static diff(before, after) {
@@ -91,12 +105,10 @@ class ExtsDate {
    * 날짜 포맷에 맞춰 문자열 반환 처리
    * TODO - 임시 처리, format 추가 처리 고려
    * @static
-   * @param {object} data
-   * @param {string | Date} data.date date 객체
-   * @param {string} data.format 변환 포맷
-   * @default
-   *  { date = new Date(), format = '' }
-   * @returns {string}
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
+   * @param {String} [data.format=''] 변환 포맷
+   * @returns {String}
    * @memberof ExtsDate
    */
   static format({ date = new Date(), format = '' }) {
@@ -118,12 +130,10 @@ class ExtsDate {
   /**
    * date 객체에서, 월 / 주 / 일 값을 변경하여 date 객체로 반환
    * @static
-   * @param {object} data
-   * @param {string | Date} data.date date 객체
-   * @param {number} data.value 가감값
-   * @param {string} data.unit 단위값
-   * @default
-   *  { date = new Date(), value = 1, unit = UNIT.DAY }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
+   * @param {Number} [data.value=1] 가감값
+   * @param {String} [data.unit=UNIT.DAY] 단위값
    * @see DATE/UNIT
    * @returns {Date}
    * @memberof ExtsDate
@@ -157,7 +167,9 @@ class ExtsDate {
   /**
    * date 값에 월 값을 가감
    * @static
-   * @param {object} { date = new Date(), value = 1 }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
+   * @param {Number} [data.value=1] 가감값
    * @returns {Date}
    * @memberof ExtsDate
    */
@@ -168,7 +180,9 @@ class ExtsDate {
   /**
    * date 값에 주 값을 가감
    * @static
-   * @param {object} { date = new Date(), value = 1 }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
+   * @param {Number} [data.value=1] 가감값
    * @returns {Date}
    * @memberof ExtsDate
    */
@@ -179,7 +193,9 @@ class ExtsDate {
   /**
    * date 값에 일자 값을 가감
    * @static
-   * @param {object} { date = new Date(), value = 1 }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
+   * @param {Number} [data.value=1] 가감값
    * @returns {Date}
    * @memberof ExtsDate
    */
@@ -190,7 +206,9 @@ class ExtsDate {
   /**
    * date 값에 시간 값을 가감
    * @static
-   * @param {object} { date = new Date(), value = 1 }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
+   * @param {Number} [data.value=1] 가감값
    * @returns {Date}
    * @memberof ExtsDate
    */
@@ -201,7 +219,8 @@ class ExtsDate {
   /**
    * 월의 시작일 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {Date}
    * @memberof ExtsDate
    */
@@ -215,7 +234,8 @@ class ExtsDate {
   /**
    * 월의 시작일, 요일 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {number}
    * @memberof ExtsDate
    */
@@ -228,7 +248,8 @@ class ExtsDate {
   /**
    * 월의 마지막날, Date 객체 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {Date}
    * @memberof ExtsDate
    */
@@ -241,15 +262,14 @@ class ExtsDate {
   /**
    * 월의 마지막날, 일자 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {number}
    * @memberof ExtsDate
    * @example
-   * ```javascript
    * import ExtsDate from 'lib/extensions/ExtsDate';
    * const endDateOfMonth = ExtsDate.endDateOfMonth({ date: '2019-12' });
    * console.table(endDayOfMonth); // 31
-   * ```
    */
   static endDateOfMonth({ date = new Date() }) {
     const endDate = ExtsDate.endOfMonth(date);
@@ -259,15 +279,14 @@ class ExtsDate {
   /**
    * 월의 마지막날, 요일 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {number}
    * @memberof ExtsDate
    * @example
-   * ```javascript
    * import ExtsDate from 'lib/extensions/ExtsDate';
    * const endDayOfMonth = ExtsDate.endDayOfMonth({ date: '2019-12' });
    * console.table(endDayOfMonth); // 2 - 화
-   * ```
    */
   static endDayOfMonth({ date = new Date() }) {
     const endDate = ExtsDate.endOfMonth(date);
@@ -277,15 +296,14 @@ class ExtsDate {
   /**
    * 월의 시작일, 마지막일을 6주 단위로 구성되도록하여 배열로 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {Array}
    * @memberof ExtsDate
    * @example
-   * ```javascript
    * import ExtsDate from 'lib/extensions/ExtsDate';
    * const monthToArray = ExtsDate.monthToArray({ date: '2019-12-31' });
    * console.table(monthToArray);
-   * ```
    */
   static monthToArray({ date = new Date() }) {
     const start = ExtsDate.startDateOfMonth({ date });
@@ -309,7 +327,8 @@ class ExtsDate {
   /**
    * 주의 시작일 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {Date}
    * @memberof ExtsDate
    */
@@ -323,7 +342,8 @@ class ExtsDate {
   /**
    * 주의 마지막일 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {Date}
    * @memberof ExtsDate
    */
@@ -336,15 +356,14 @@ class ExtsDate {
   /**
    * 주의 시작일 ~ 마지막일을 기준으로, 0 ~ 24시 단위로 구성되도록하여 배열로 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {Array}
    * @memberof ExtsDate
    * @example
-   * ```javascript
    * import ExtsDate from 'lib/extensions/ExtsDate';
    * const weekToArray = ExtsDate.weekToArray({ date: '2019-12-31' });
    * console.table(weekToArray);
-   * ```
    */
   static weekToArray({ date = new Date() }) {
     const start = ExtsDate.startDateOfWeek({ date });
@@ -381,7 +400,7 @@ export default ExtsDate;
 
 <footer class="footer">
     <div class="content has-text-centered">
-        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Jan 02 2020 23:48:59 GMT+0900 (GMT+09:00)</p>
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Jan 03 2020 02:04:20 GMT+0900 (GMT+09:00)</p>
         <p class="sidebar-created-by">
             <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
             <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>

@@ -46,7 +46,7 @@
             <div class="column is-3" id="sidebarNav">
                 <div class="sidebar">
                     <nav>
-                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="CalendarModel.html">CalendarModel</a></li><li><a href="EventModel.html">EventModel</a></li><li><a href="ExtsDate.html">ExtsDate</a></li><li><a href="Model.html">Model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Calendar">Calendar</a></li><li><a href="global.html#CALENDAR">CALENDAR</a></li><li><a href="global.html#CALENDAR/VIEW_TYPE">CALENDAR/VIEW_TYPE</a></li><li><a href="global.html#DATE">DATE</a></li><li><a href="global.html#DATE/DAY_MILLISECONDS">DATE/DAY_MILLISECONDS</a></li><li><a href="global.html#DATE/DAY_NAME_WEEK">DATE/DAY_NAME_WEEK</a></li><li><a href="global.html#DATE/HOUR_MILLISECONDS">DATE/HOUR_MILLISECONDS</a></li><li><a href="global.html#DATE/MAX_DATES">DATE/MAX_DATES</a></li><li><a href="global.html#DATE/MINUTE_MILLISECONDS">DATE/MINUTE_MILLISECONDS</a></li><li><a href="global.html#DATE/START_DAY_WEEK">DATE/START_DAY_WEEK</a></li><li><a href="global.html#DATE/UNIT">DATE/UNIT</a></li><li><a href="global.html#DATE/WEEK_SIZE">DATE/WEEK_SIZE</a></li><li><a href="global.html#deepFreeze">deepFreeze</a></li><li><a href="global.html#ERROR_TYPES">ERROR_TYPES</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT">ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT">ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT</a></li><li><a href="global.html#ERROR_TYPES/EVENT_INVALID_TIME_DIFF">ERROR_TYPES/EVENT_INVALID_TIME_DIFF</a></li><li><a href="global.html#ERROR_TYPES/MODEL_ABSTRACT_METHODS_MUST_BE_OVERRIDDEN">ERROR_TYPES/MODEL_ABSTRACT_METHODS_MUST_BE_OVERRIDDEN</a></li><li><a href="global.html#uuidv4">uuidv4</a></li></ul></div>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-components.html">components</a></li><li><a href="module-components_calendar_Calendar.html">components/calendar/Calendar</a></li><li><a href="module-components_calendar_ControlView.html">components/calendar/ControlView</a></li><li><a href="module-components_calendar_EventModal.html">components/calendar/EventModal</a></li><li><a href="module-components_calendar_EventView.html">components/calendar/EventView</a></li><li><a href="module-components_calendar_MonthView.html">components/calendar/MonthView</a></li><li><a href="module-components_calendar_MonthViewHeader.html">components/calendar/MonthViewHeader</a></li><li><a href="module-components_calendar_MonthViewList.html">components/calendar/MonthViewList</a></li><li><a href="module-components_calendar_WeekView.html">components/calendar/WeekView</a></li><li><a href="module-components_calendar_WeekViewHeader.html">components/calendar/WeekViewHeader</a></li><li><a href="module-components_calendar_WeekViewList.html">components/calendar/WeekViewList</a></li><li><a href="module-components_notification.html">components/notification</a></li></ul><h3>Classes</h3><ul><li><a href="CalendarModel.html">CalendarModel</a></li><li><a href="EventModel.html">EventModel</a></li><li><a href="ExtsDate.html">ExtsDate</a></li><li><a href="Model.html">Model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CALENDAR">CALENDAR</a></li><li><a href="global.html#CALENDAR/VIEW_TYPE">CALENDAR/VIEW_TYPE</a></li><li><a href="global.html#DATE">DATE</a></li><li><a href="global.html#DATE/DAY_MILLISECONDS">DATE/DAY_MILLISECONDS</a></li><li><a href="global.html#DATE/DAY_NAME_WEEK">DATE/DAY_NAME_WEEK</a></li><li><a href="global.html#DATE/HOUR_MILLISECONDS">DATE/HOUR_MILLISECONDS</a></li><li><a href="global.html#DATE/MAX_DATES">DATE/MAX_DATES</a></li><li><a href="global.html#DATE/MAX_HOURS">DATE/MAX_HOURS</a></li><li><a href="global.html#DATE/MINUTE_MILLISECONDS">DATE/MINUTE_MILLISECONDS</a></li><li><a href="global.html#DATE/START_DAY_WEEK">DATE/START_DAY_WEEK</a></li><li><a href="global.html#DATE/UNIT">DATE/UNIT</a></li><li><a href="global.html#DATE/WEEK_SIZE">DATE/WEEK_SIZE</a></li><li><a href="global.html#deepFreeze">deepFreeze</a></li><li><a href="global.html#ERROR_TYPES">ERROR_TYPES</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT">ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT">ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT</a></li><li><a href="global.html#ERROR_TYPES/EVENT_INVALID_TIME_DIFF">ERROR_TYPES/EVENT_INVALID_TIME_DIFF</a></li><li><a href="global.html#ERROR_TYPES/MODEL_ABSTRACT_METHODS_MUST_BE_OVERRIDDEN">ERROR_TYPES/MODEL_ABSTRACT_METHODS_MUST_BE_OVERRIDDEN</a></li><li><a href="global.html#uuidv4">uuidv4</a></li></ul></div>
                     </nav>
                 </div>
             </div>
@@ -82,6 +82,14 @@ import EventModel from 'lib/models/Calendar/EventModel';
 
 import { CALENDAR_INVALID_ADD_EVENT, EVENT_INVALID_TIME_DIFF } from 'lib/constants/errorTypes';
 
+const calendarModel = new CalendarModel();
+
+/**
+ * View&lt;br>
+ * Month / Week View 렌더링 조건 처리
+ * @component
+ * @private
+ */
 const View = props => {
   const { viewType } = props;
 
@@ -95,17 +103,24 @@ const View = props => {
   }
 }
 
-const calendarModel = new CalendarModel();
-
-
 /**
- * Component Calendar
- * @component
- * @see VIEW_TYPE
- * @see CalendarModel
- * @see EventModel
+ * Component Calendar&lt;br>일정을 관리하는 Calendar Component
+ * 
+ * @alias components/calendar/Calendar
+ * @module components/calendar/Calendar
+ * 
+ * @requires components/calendar/ControlView
+ * @requires components/calendar/MonthView
+ * @requires components/calendar/WeekView
+ * @requires components/calendar/EventModal
+ * 
+ * @param {Object} props
+ * @param {Date} [props.defaultDate=new Date()] 기본 일자
+ * @param {String} [props.defaultViewType=VIEW_TYPE.MONTH] 기본 화면 설정( 월 / 주 )
+ * @param {Array} [props.events=[]] event 설정
+ * 
  * @example
- * import React, { useState, useCallback, useEffect } from 'react';
+ * import React from 'react';
  * import Calendar from 'lib/models/Calendar/EventModel';
  * import EventModel from 'lib/models/Calendar/EventModel';
  * import { VIEW_TYPE } from 'lib/constants/calendar';
@@ -352,39 +367,31 @@ const Calendar = props => {
   );
 }
 
-const dummyEvents = (() => {
-  const date = new Date('2020-01-01T00:00:00');
-  return Array(2).fill(1).map((_, value) => {
-    return {
-      title: `일정 - ${value}`,
-      startAt: ExtsDate.addHour({ date, value: value }),
-      endAt: ExtsDate.addHour({ date, value: value + 1 })
-    }
-  });
-})();
+// test 용
+// const dummyEvents = (() => {
+//   const date = new Date('2020-01-01T00:00:00');
+//   return Array(2).fill(1).map((_, value) => {
+//     return {
+//       title: `일정 - ${value}`,
+//       startAt: ExtsDate.addHour({ date, value: value }),
+//       endAt: ExtsDate.addHour({ date, value: value + 1 })
+//     }
+//   });
+// })();
 
-Calendar.defaultProps = {
-  /**
-   * 기본 일자 설정
-   */
+Calendar.propTypes = {
   defaultDate: PropTypes.instanceOf(Date),
-  /**
-   * 기본 화면 설정( 월 / 주 )
-   */
-  defaultViewType: PropTypes.arrayOf([
+  defaultViewType: PropTypes.oneOf([
     VIEW_TYPE.MONTH,
     VIEW_TYPE.WEEK
   ]),
-  /**
-   * event 설정
-   */
   events: PropTypes.array
 };
 
 Calendar.defaultProps = {
   defaultDate: new Date(),
   defaultViewType: VIEW_TYPE.MONTH,
-  events: dummyEvents
+  events: []
 };
 
 export default Calendar;
@@ -403,7 +410,7 @@ export default Calendar;
 
 <footer class="footer">
     <div class="content has-text-centered">
-        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Jan 02 2020 23:48:59 GMT+0900 (GMT+09:00)</p>
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Jan 03 2020 02:04:20 GMT+0900 (GMT+09:00)</p>
         <p class="sidebar-created-by">
             <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
             <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>

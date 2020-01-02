@@ -1,5 +1,5 @@
 /**
- * uuidv4 generator
+ * uuidv4 generator<br>고유 uuidv4 생성
  * @see https://www.ietf.org/rfc/rfc4122.txt
  * @see https://github.com/kelektiv/node-uuid
  * @see https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript

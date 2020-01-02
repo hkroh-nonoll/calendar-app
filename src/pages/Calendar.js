@@ -2,7 +2,7 @@ import React from 'react';
 
 import Calendar from 'components/calendar/Calendar';
 
-const CalendarPage = props => {
+const CalendarPage = () => {
   return (
     <Calendar />
   );

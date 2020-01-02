@@ -16,6 +16,14 @@ import EventModel from 'lib/models/Calendar/EventModel';
 
 import { CALENDAR_INVALID_ADD_EVENT, EVENT_INVALID_TIME_DIFF } from 'lib/constants/errorTypes';
 
+const calendarModel = new CalendarModel();
+
+/**
+ * View<br>
+ * Month / Week View 렌더링 조건 처리
+ * @component
+ * @private
+ */
 const View = props => {
   const { viewType } = props;
 
@@ -29,17 +37,24 @@ const View = props => {
   }
 }
 
-const calendarModel = new CalendarModel();
-
-
 /**
- * Component Calendar
- * @component
- * @see VIEW_TYPE
- * @see CalendarModel
- * @see EventModel
+ * Component Calendar<br>일정을 관리하는 Calendar Component
+ * 
+ * @alias components/calendar/Calendar
+ * @module components/calendar/Calendar
+ * 
+ * @requires components/calendar/ControlView
+ * @requires components/calendar/MonthView
+ * @requires components/calendar/WeekView
+ * @requires components/calendar/EventModal
+ * 
+ * @param {Object} props
+ * @param {Date} [props.defaultDate=new Date()] 기본 일자
+ * @param {String} [props.defaultViewType=VIEW_TYPE.MONTH] 기본 화면 설정( 월 / 주 )
+ * @param {Array} [props.events=[]] event 설정
+ * 
  * @example
- * import React, { useState, useCallback, useEffect } from 'react';
+ * import React from 'react';
  * import Calendar from 'lib/models/Calendar/EventModel';
  * import EventModel from 'lib/models/Calendar/EventModel';
  * import { VIEW_TYPE } from 'lib/constants/calendar';
@@ -287,39 +302,30 @@ const Calendar = props => {
 }
 
 // test 용
-const dummyEvents = (() => {
-  const date = new Date('2020-01-01T00:00:00');
-  return Array(2).fill(1).map((_, value) => {
-    return {
-      title: `일정 - ${value}`,
-      startAt: ExtsDate.addHour({ date, value: value }),
-      endAt: ExtsDate.addHour({ date, value: value + 1 })
-    }
-  });
-})();
+// const dummyEvents = (() => {
+//   const date = new Date('2020-01-01T00:00:00');
+//   return Array(2).fill(1).map((_, value) => {
+//     return {
+//       title: `일정 - ${value}`,
+//       startAt: ExtsDate.addHour({ date, value: value }),
+//       endAt: ExtsDate.addHour({ date, value: value + 1 })
+//     }
+//   });
+// })();
 
-Calendar.defaultProps = {
-  /**
-   * 기본 일자 설정
-   */
+Calendar.propTypes = {
   defaultDate: PropTypes.instanceOf(Date),
-  /**
-   * 기본 화면 설정( 월 / 주 )
-   */
-  defaultViewType: PropTypes.arrayOf([
+  defaultViewType: PropTypes.oneOf([
     VIEW_TYPE.MONTH,
     VIEW_TYPE.WEEK
   ]),
-  /**
-   * event 설정
-   */
   events: PropTypes.array
 };
 
 Calendar.defaultProps = {
   defaultDate: new Date(),
   defaultViewType: VIEW_TYPE.MONTH,
-  events: dummyEvents
+  events: []
 };
 
 export default Calendar;

@@ -1,4 +1,4 @@
-import { UNIT, WEEK_SIZE, MAX_HOURS, MAX_DATES, START_DAY_WEEK } from '../constants/date';
+import { UNIT, WEEK_SIZE, MAX_HOURS, MAX_DATES, START_DAY_WEEK } from 'lib/constants/date';
 
 /**
  * Date / DateTime 처리용 class 
@@ -7,11 +7,25 @@ import { UNIT, WEEK_SIZE, MAX_HOURS, MAX_DATES, START_DAY_WEEK } from '../consta
 class ExtsDate {
 
   /**
+   * Date 의 hour, minute, second 를 ms 기준으로 반환
+   * @static
+   * @param {Object} data
+   * @param {Number} data.hour 시
+   * @param {Number} data.minute 분
+   * @param {Number} data.second 초
+   * @returns {Number}
+   * @memberof ExtsDate
+   */
+  static getMillisecondsByDay = ({ hour = 0, minute = 0, second = 0}) => {
+    return (hour * 60 * 60 * 1000) + (minute * 60 * 1000) + (second * 1000);
+  }
+
+  /**
    * after - before 으로 값 비교하여 반환
    * @static
-   * @param {string | Date} before
-   * @param {string | Date} after
-   * @returns {number}
+   * @param {String | Date} before 이전 시간
+   * @param {String | Date} after 이후 시간
+   * @returns {Number}
    * @memberof ExtsDate
    */
   static diff(before, after) {
@@ -25,12 +39,10 @@ class ExtsDate {
    * 날짜 포맷에 맞춰 문자열 반환 처리
    * TODO - 임시 처리, format 추가 처리 고려
    * @static
-   * @param {object} data
-   * @param {string | Date} data.date date 객체
-   * @param {string} data.format 변환 포맷
-   * @default
-   *  { date = new Date(), format = '' }
-   * @returns {string}
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
+   * @param {String} [data.format=''] 변환 포맷
+   * @returns {String}
    * @memberof ExtsDate
    */
   static format({ date = new Date(), format = '' }) {
@@ -52,12 +64,10 @@ class ExtsDate {
   /**
    * date 객체에서, 월 / 주 / 일 값을 변경하여 date 객체로 반환
    * @static
-   * @param {object} data
-   * @param {string | Date} data.date date 객체
-   * @param {number} data.value 가감값
-   * @param {string} data.unit 단위값
-   * @default
-   *  { date = new Date(), value = 1, unit = UNIT.DAY }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
+   * @param {Number} [data.value=1] 가감값
+   * @param {String} [data.unit=UNIT.DAY] 단위값
    * @see DATE/UNIT
    * @returns {Date}
    * @memberof ExtsDate
@@ -91,7 +101,9 @@ class ExtsDate {
   /**
    * date 값에 월 값을 가감
    * @static
-   * @param {object} { date = new Date(), value = 1 }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
+   * @param {Number} [data.value=1] 가감값
    * @returns {Date}
    * @memberof ExtsDate
    */
@@ -102,7 +114,9 @@ class ExtsDate {
   /**
    * date 값에 주 값을 가감
    * @static
-   * @param {object} { date = new Date(), value = 1 }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
+   * @param {Number} [data.value=1] 가감값
    * @returns {Date}
    * @memberof ExtsDate
    */
@@ -113,7 +127,9 @@ class ExtsDate {
   /**
    * date 값에 일자 값을 가감
    * @static
-   * @param {object} { date = new Date(), value = 1 }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
+   * @param {Number} [data.value=1] 가감값
    * @returns {Date}
    * @memberof ExtsDate
    */
@@ -124,7 +140,9 @@ class ExtsDate {
   /**
    * date 값에 시간 값을 가감
    * @static
-   * @param {object} { date = new Date(), value = 1 }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
+   * @param {Number} [data.value=1] 가감값
    * @returns {Date}
    * @memberof ExtsDate
    */
@@ -135,7 +153,8 @@ class ExtsDate {
   /**
    * 월의 시작일 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {Date}
    * @memberof ExtsDate
    */
@@ -149,7 +168,8 @@ class ExtsDate {
   /**
    * 월의 시작일, 요일 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {number}
    * @memberof ExtsDate
    */
@@ -162,7 +182,8 @@ class ExtsDate {
   /**
    * 월의 마지막날, Date 객체 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {Date}
    * @memberof ExtsDate
    */
@@ -175,15 +196,14 @@ class ExtsDate {
   /**
    * 월의 마지막날, 일자 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {number}
    * @memberof ExtsDate
    * @example
-   * ```javascript
    * import ExtsDate from 'lib/extensions/ExtsDate';
    * const endDateOfMonth = ExtsDate.endDateOfMonth({ date: '2019-12' });
    * console.table(endDayOfMonth); // 31
-   * ```
    */
   static endDateOfMonth({ date = new Date() }) {
     const endDate = ExtsDate.endOfMonth(date);
@@ -193,15 +213,14 @@ class ExtsDate {
   /**
    * 월의 마지막날, 요일 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {number}
    * @memberof ExtsDate
    * @example
-   * ```javascript
    * import ExtsDate from 'lib/extensions/ExtsDate';
    * const endDayOfMonth = ExtsDate.endDayOfMonth({ date: '2019-12' });
    * console.table(endDayOfMonth); // 2 - 화
-   * ```
    */
   static endDayOfMonth({ date = new Date() }) {
     const endDate = ExtsDate.endOfMonth(date);
@@ -211,15 +230,14 @@ class ExtsDate {
   /**
    * 월의 시작일, 마지막일을 6주 단위로 구성되도록하여 배열로 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {Array}
    * @memberof ExtsDate
    * @example
-   * ```javascript
    * import ExtsDate from 'lib/extensions/ExtsDate';
    * const monthToArray = ExtsDate.monthToArray({ date: '2019-12-31' });
    * console.table(monthToArray);
-   * ```
    */
   static monthToArray({ date = new Date() }) {
     const start = ExtsDate.startDateOfMonth({ date });
@@ -243,7 +261,8 @@ class ExtsDate {
   /**
    * 주의 시작일 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {Date}
    * @memberof ExtsDate
    */
@@ -257,7 +276,8 @@ class ExtsDate {
   /**
    * 주의 마지막일 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {Date}
    * @memberof ExtsDate
    */
@@ -270,15 +290,14 @@ class ExtsDate {
   /**
    * 주의 시작일 ~ 마지막일을 기준으로, 0 ~ 24시 단위로 구성되도록하여 배열로 반환
    * @static
-   * @param {object} { date = new Date() }
+   * @param {Object} data
+   * @param {String | Date} [data.date=new Date()] date 객체
    * @returns {Array}
    * @memberof ExtsDate
    * @example
-   * ```javascript
    * import ExtsDate from 'lib/extensions/ExtsDate';
    * const weekToArray = ExtsDate.weekToArray({ date: '2019-12-31' });
    * console.table(weekToArray);
-   * ```
    */
   static weekToArray({ date = new Date() }) {
     const start = ExtsDate.startDateOfWeek({ date });
