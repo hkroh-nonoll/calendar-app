@@ -32,16 +32,16 @@ notifications:
 # see: https://docs.travis-ci.com/user/job-lifecycle/#the-job-lifecycle
 
 
-#install:
-#  - nvm install 10
+install:
+  - nvm install 10
 
-before_script:
-  - npm install
+before_install:
+  - yarn install
 
 # before_install:
 
 script:
-  - npm run test
+  - yarn run test
 
 
 # 배포 설정 for heroku
