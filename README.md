@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/nonoll/github-feature-test.svg?branch=master)](https://travis-ci.org/nonoll/github-feature-test)
+[![Build Status](https://travis-ci.org/hkroh-nonoll/calendar-app.svg?branch=master)](https://travis-ci.org/hkroh-nonoll/calendar-app)
 [![Heroku](https://heroku-badge.herokuapp.com/?app=hkroh-calendar-app&style=flat)](https://hkroh-calendar-app.herokuapp.com)
 
 # Calendar App
@@ -13,7 +13,6 @@
 - 진행 목표
   - git issue / milestone / project 활용할 것
   - 레퍼런스 분석 > 구현 요건 개발 > Application 개발
-  - 되도록이면 특정 프레임워크에 종속적이지 않게 구현하기로 함
 
 ### 1.2. 레퍼런스 분석
 - [calendar-reference](https://github.com/hkroh-nonoll/calendar-reference)
@@ -21,9 +20,9 @@
   - `fullCalendar > tui.calendar > vue-fullcallendar > react-big-calendar`
 
 ### 1.3. 프레임워크 선정
-- react 진행 결정
 - 실무에서는 vue 로 주로 사용하였으나, [kakaopay](https://www.kakaopay.com/) 사이트가 react 로 구성된 것으로 확인
-- 제대로 공부해본 적이 없어서, 레퍼런스 분석 기간 동안 학습 병행
+  - `react 진행 결정`
+- 레퍼런스 분석 기간 동안, react 학습 병행
 
 ### 1.4. 일정 할당
 - 일정내에 모든 구현은 어려울 것으로 예상
@@ -42,7 +41,7 @@
 - 월 표현
   - 기간에 따라 주 변화폭( 높이 )이 생김
   - 주 단위 표현을 고려하면, 전월 / 다음월 일자도 노출이 되어야 함
-    - `요일(7일) * 최대주(6) 를 기준으로 42일씩 표현 처리`
+    - `요일(7일) * 최대주(6) 를 기준으로 42개의 날짜 영역 구성`
 - 주 표현
   - 월 표현과 동일한 맥락으로 접근
   - 월과 다른것은 세로(시간) 기준으로 정렬이 되어야 하는 점
@@ -145,7 +144,6 @@
 - 학습단계에서의 useCallback
   - 하위 컴포넌트로 useCallback 선언 된것을 전달했을 때, 값이 제대로 갱신이 안되는 경우 확인
   - useCallback 선언시, 디펜던시가 되는 값을 제대로 설정하지 않았던 케이스
-    - `memoization`
   - memoization 기능이 적용되어 있다고 판단되어, 적절한 사용은 좋다고 판단
   - 경우에 따라 난해한 상황이 발생할 수 있어서 신중한 사용이 필요해 보임
 

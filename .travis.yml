@@ -4,7 +4,6 @@ node_js:
 - "10"
 
 cache:
-  yarn: true
   directories:
     - node_modules
 
@@ -36,12 +35,13 @@ notifications:
 install:
   - nvm install 10
 
-before_script:
-  - yarn
+before_install:
+  - yarn install
 
 # before_install:
 
-# script:
+script:
+  - yarn run test
 
 
 # 배포 설정 for heroku
