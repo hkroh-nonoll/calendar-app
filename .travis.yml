@@ -4,7 +4,6 @@ node_js:
 - "10"
 
 cache:
-  yarn: true
   directories:
     - node_modules
 
@@ -33,15 +32,16 @@ notifications:
 # see: https://docs.travis-ci.com/user/job-lifecycle/#the-job-lifecycle
 
 
-install:
-  - nvm install 10
+#install:
+#  - nvm install 10
 
 before_script:
-  - yarn
+  - npm install
 
 # before_install:
 
-# script:
+script:
+  - npm run test
 
 
 # 배포 설정 for heroku
