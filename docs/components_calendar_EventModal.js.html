@@ -1,0 +1,238 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>JSDoc: components/calendar/EventModal.js</title>
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="./build/entry.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Muli:100,400,700|Oswald:300|Inconsolata,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+</head>
+
+<body>
+    <div id="stickyNavbarOverlay"></div>
+    <div class="top-navbar">
+        <div class="container">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    
+                    
+                        <h1 class="navbar-item">Documentation</h1>
+                    
+                    <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+                
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-3" id="sidebarNav">
+                <div class="sidebar">
+                    <nav>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-components.html">components</a></li><li><a href="module-components_calendar_Calendar.html">components/calendar/Calendar</a></li><li><a href="module-components_calendar_ControlView.html">components/calendar/ControlView</a></li><li><a href="module-components_calendar_EventModal.html">components/calendar/EventModal</a></li><li><a href="module-components_calendar_EventView.html">components/calendar/EventView</a></li><li><a href="module-components_calendar_MonthView.html">components/calendar/MonthView</a></li><li><a href="module-components_calendar_MonthViewHeader.html">components/calendar/MonthViewHeader</a></li><li><a href="module-components_calendar_MonthViewList.html">components/calendar/MonthViewList</a></li><li><a href="module-components_calendar_WeekView.html">components/calendar/WeekView</a></li><li><a href="module-components_calendar_WeekViewHeader.html">components/calendar/WeekViewHeader</a></li><li><a href="module-components_calendar_WeekViewList.html">components/calendar/WeekViewList</a></li><li><a href="module-components_notification.html">components/notification</a></li></ul><h3>Classes</h3><ul><li><a href="CalendarModel.html">CalendarModel</a></li><li><a href="EventModel.html">EventModel</a></li><li><a href="ExtsDate.html">ExtsDate</a></li><li><a href="Model.html">Model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CALENDAR">CALENDAR</a></li><li><a href="global.html#CALENDAR/VIEW_TYPE">CALENDAR/VIEW_TYPE</a></li><li><a href="global.html#DATE">DATE</a></li><li><a href="global.html#DATE/DAY_MILLISECONDS">DATE/DAY_MILLISECONDS</a></li><li><a href="global.html#DATE/DAY_NAME_WEEK">DATE/DAY_NAME_WEEK</a></li><li><a href="global.html#DATE/HOUR_MILLISECONDS">DATE/HOUR_MILLISECONDS</a></li><li><a href="global.html#DATE/MAX_DATES">DATE/MAX_DATES</a></li><li><a href="global.html#DATE/MAX_HOURS">DATE/MAX_HOURS</a></li><li><a href="global.html#DATE/MINUTE_MILLISECONDS">DATE/MINUTE_MILLISECONDS</a></li><li><a href="global.html#DATE/START_DAY_WEEK">DATE/START_DAY_WEEK</a></li><li><a href="global.html#DATE/UNIT">DATE/UNIT</a></li><li><a href="global.html#DATE/WEEK_SIZE">DATE/WEEK_SIZE</a></li><li><a href="global.html#deepFreeze">deepFreeze</a></li><li><a href="global.html#ERROR_TYPES">ERROR_TYPES</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT">ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT">ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT</a></li><li><a href="global.html#ERROR_TYPES/EVENT_INVALID_TIME_DIFF">ERROR_TYPES/EVENT_INVALID_TIME_DIFF</a></li><li><a href="global.html#ERROR_TYPES/MODEL_ABSTRACT_METHODS_MUST_BE_OVERRIDDEN">ERROR_TYPES/MODEL_ABSTRACT_METHODS_MUST_BE_OVERRIDDEN</a></li><li><a href="global.html#uuidv4">uuidv4</a></li></ul></div>
+                    </nav>
+                </div>
+            </div>
+            <div class="column is-9-desktop">
+                <div class="content" id="main-content-wrapper">
+                    <header class="page-title">
+                        <p>Source</p>
+                        <h1>components/calendar/EventModal.js</h1>
+                    </header>
+                    
+                    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import PropTypes from 'prop-types';
+import React, { useState, useRef, useEffect } from 'react';
+import moment from 'moment';
+import { Modal, Button, Form, Input, DatePicker } from 'antd';
+
+import ExtsDate from 'lib/extensions/ExtsDate';
+  
+/**
+ * EventModal&lt;br>일정 추가/수정/삭제 화면&lt;br>
+ * showTime 옵션 설정으로 불가피한 moment 디펜던시 발생
+ * @alias components/calendar/EventModal
+ * @module components/calendar/EventModal
+ * 
+ * @param {Object} props
+ * @param {Boolean} [props.visible=false] model visible 여부
+ * @param {String} [props.title=''] viewType Week 일 경우, 타이틀
+ * @param {Date | String} [props.startAt=new Date()] 시작일
+ * @param {Date | String} [props.endAt=ExtsDate.addHour({ date: new Date(), value: 1 })] 종료일
+ * @param {Object | null} [props.showTime={format: 'HH'}] timepicker 옵션
+ * @param {Function} [props.onConfirmClick=({ title, startAt, endAt }) => {}] 확인 버튼 클릭시
+ * @param {Function} [props.onCancelClick=({ title, startAt, endAt }) => {}] 취소 버튼 클릭시
+ * @param {Function} [props.onDeleteClick=({ title, startAt, endAt }) => {}] 삭제 버튼 클릭시
+ * @param {Function} [props.onSubmit=({ title, startAt, endAt }) => {}] submit 시
+ * 
+ * @see https://ant.design/components/time-picker/#API
+ * @see CALENDAR/VIEW_TYPE
+ */
+const EventModal = props => {
+  const {
+    visible,
+    title,
+    startAt,
+    endAt,
+    showTime,
+    format,
+    onConfirmClick,
+    onCancelClick,
+    onDeleteClick,
+    onSubmit,
+    eventEdit
+  } = props;
+
+  const titleRef = useRef(null);
+  const [eventTitle, setEventTitle] = useState(title);
+  const [eventStartAt, setEventStatAt] = useState(moment(startAt));
+  const [eventEndAt, setEventEndAt] = useState(moment(endAt));
+
+  const getEventData = () => {
+    return { title: eventTitle, startAt: eventStartAt.toDate(), endAt: eventEndAt.toDate() };
+  };
+
+  const handleDeleteClick = _ => onDeleteClick(getEventData());
+  const handleCancelClick = _ => onCancelClick(getEventData());
+  const handleConfirmClick = _ => onConfirmClick(getEventData());
+  const handleSubmit = _ => onSubmit(getEventData());
+
+  useEffect(() => {
+    if (titleRef) {
+      // TODO: Ant Design 에서 구성되어 있어서, 시점상의 문제가 생겨 setTimeout 으로 처리 더 적절할 방법 고려
+      setTimeout(() => {
+        titleRef.current.input.focus();
+      });
+    }
+  }, [titleRef]);
+
+  return (
+    &lt;Modal
+      title="일정 관리"
+      visible={visible}
+      onOk={handleConfirmClick}
+      onCancel={handleCancelClick}
+      footer={[
+        eventEdit ? &lt;Button key="delete" type="danger" onClick={handleDeleteClick}>Delete&lt;/Button> : null,
+        &lt;Button key="cancel" onClick={handleCancelClick}>Cancel&lt;/Button>,
+        &lt;Button key="submit" type="primary" onClick={handleConfirmClick}>OK&lt;/Button>
+      ]}
+    >
+      &lt;Form onSubmit={handleSubmit}>
+        &lt;Form.Item label="제목">
+          &lt;Input
+            ref={titleRef}
+            placeholder="일정 제목"
+            defaultValue={title}
+            onChange={e => setEventTitle(e.target.value)}
+            onPressEnter={handleConfirmClick}
+          />
+        &lt;/Form.Item>
+        &lt;Form.Item label="시작">
+          &lt;DatePicker 
+            showTime={showTime}
+            defaultValue={moment(startAt)}
+            format={format}
+            onChange={value => setEventStatAt(value)}
+          />
+        &lt;/Form.Item>
+        &lt;Form.Item label="종료">
+          &lt;DatePicker 
+            showTime={showTime}
+            defaultValue={moment(endAt)}
+            format={format}
+            onChange={value => setEventEndAt(value)}
+          />
+        &lt;/Form.Item>
+      &lt;/Form>
+    &lt;/Modal>
+  );
+}
+
+EventModal.propTypes = {
+  visible: PropTypes.bool,
+  title: PropTypes.string,
+  startAt: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Date)
+  ]).isRequired,
+  endAt: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Date)
+  ]).isRequired,
+  showTime: PropTypes.instanceOf(Object),
+  format: PropTypes.string,
+  onConfirmClick: PropTypes.func,
+  onCancelClick: PropTypes.func,
+  onDeleteClick: PropTypes.func,
+  onSubmit: PropTypes.func,
+  eventEdit: PropTypes.any
+}
+
+EventModal.defaultProps = {
+  visible: false,
+  title: '',
+  startAt: new Date(),
+  endAt: ExtsDate.addHour({ date: new Date(), value: 1 }),
+  showTime: {
+    format: 'HH'
+  },
+  format: 'YYYY-MM-DD HH:mm',
+  onConfirmClick: () => {},
+  onCancelClick: () => {},
+  onDeleteClick: () => {},
+  onSubmit: () => {}
+};
+
+export default EventModal;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Jan 03 2020 02:04:20 GMT+0900 (GMT+09:00)</p>
+        <p class="sidebar-created-by">
+            <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+            <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+        </p>
+    </div>
+</footer>
+
+
+<script src="scripts/app.min.js"></script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

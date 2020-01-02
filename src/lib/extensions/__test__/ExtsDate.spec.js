@@ -14,4 +14,28 @@ describe('# lib/extensions/ExtsDate Spec Test', () => {
     });
   });
 
+  describe('# ExtsDate.format 기능 확인', () => {
+    it('ExtsDate.format({ date: "2020-01-02", format: "YYYY년 MM월" }) - 결과값은 "2020년 01월" 이 된다.', () => {
+      const result = ExtsDate.format({ date: '2020-01-02"', format: 'YYYY년 MM월' });
+      expect(result).toEqual('2020년 01월');
+    });
+
+    it('ExtsDate.format({ date: "2020-01-02", format: "YYYY년 MM월 DD일" }) - 결과값은 "2020년 01월 02일" 이 된다.', () => {
+      const result = ExtsDate.format({ date: '2020-01-02"', format: 'YYYY년 MM월 DD일' });
+      expect(result).toEqual('2020년 01월 02일');
+    });
+  });
+
+  describe('# ExtsDate.add 기능 확인', () => {
+    it('ExtsDate.format({ date: "2020-01-02", format: "YYYY년 MM월" }) - 결과값은 "2020년 01월" 이 된다.', () => {
+      const result = ExtsDate.format({ date: '2020-01-02"', format: 'YYYY년 MM월' });
+      expect(result).toEqual('2020년 01월');
+    });
+
+    it('ExtsDate.format({ date: "2020-01-02", format: "YYYY년 MM월 DD일" }) - 결과값은 "2020년 01월 02일" 이 된다.', () => {
+      const result = ExtsDate.format({ date: '2020-01-02"', format: 'YYYY년 MM월 DD일' });
+      expect(result).toEqual('2020년 01월 02일');
+    });
+  });
+
 });

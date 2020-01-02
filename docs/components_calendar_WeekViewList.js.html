@@ -1,0 +1,214 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>JSDoc: components/calendar/WeekViewList.js</title>
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="./build/entry.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Muli:100,400,700|Oswald:300|Inconsolata,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+</head>
+
+<body>
+    <div id="stickyNavbarOverlay"></div>
+    <div class="top-navbar">
+        <div class="container">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    
+                    
+                        <h1 class="navbar-item">Documentation</h1>
+                    
+                    <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+                
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-3" id="sidebarNav">
+                <div class="sidebar">
+                    <nav>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-components.html">components</a></li><li><a href="module-components_calendar_Calendar.html">components/calendar/Calendar</a></li><li><a href="module-components_calendar_ControlView.html">components/calendar/ControlView</a></li><li><a href="module-components_calendar_EventModal.html">components/calendar/EventModal</a></li><li><a href="module-components_calendar_EventView.html">components/calendar/EventView</a></li><li><a href="module-components_calendar_MonthView.html">components/calendar/MonthView</a></li><li><a href="module-components_calendar_MonthViewHeader.html">components/calendar/MonthViewHeader</a></li><li><a href="module-components_calendar_MonthViewList.html">components/calendar/MonthViewList</a></li><li><a href="module-components_calendar_WeekView.html">components/calendar/WeekView</a></li><li><a href="module-components_calendar_WeekViewHeader.html">components/calendar/WeekViewHeader</a></li><li><a href="module-components_calendar_WeekViewList.html">components/calendar/WeekViewList</a></li><li><a href="module-components_notification.html">components/notification</a></li></ul><h3>Classes</h3><ul><li><a href="CalendarModel.html">CalendarModel</a></li><li><a href="EventModel.html">EventModel</a></li><li><a href="ExtsDate.html">ExtsDate</a></li><li><a href="Model.html">Model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CALENDAR">CALENDAR</a></li><li><a href="global.html#CALENDAR/VIEW_TYPE">CALENDAR/VIEW_TYPE</a></li><li><a href="global.html#DATE">DATE</a></li><li><a href="global.html#DATE/DAY_MILLISECONDS">DATE/DAY_MILLISECONDS</a></li><li><a href="global.html#DATE/DAY_NAME_WEEK">DATE/DAY_NAME_WEEK</a></li><li><a href="global.html#DATE/HOUR_MILLISECONDS">DATE/HOUR_MILLISECONDS</a></li><li><a href="global.html#DATE/MAX_DATES">DATE/MAX_DATES</a></li><li><a href="global.html#DATE/MAX_HOURS">DATE/MAX_HOURS</a></li><li><a href="global.html#DATE/MINUTE_MILLISECONDS">DATE/MINUTE_MILLISECONDS</a></li><li><a href="global.html#DATE/START_DAY_WEEK">DATE/START_DAY_WEEK</a></li><li><a href="global.html#DATE/UNIT">DATE/UNIT</a></li><li><a href="global.html#DATE/WEEK_SIZE">DATE/WEEK_SIZE</a></li><li><a href="global.html#deepFreeze">deepFreeze</a></li><li><a href="global.html#ERROR_TYPES">ERROR_TYPES</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT">ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT">ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT</a></li><li><a href="global.html#ERROR_TYPES/EVENT_INVALID_TIME_DIFF">ERROR_TYPES/EVENT_INVALID_TIME_DIFF</a></li><li><a href="global.html#ERROR_TYPES/MODEL_ABSTRACT_METHODS_MUST_BE_OVERRIDDEN">ERROR_TYPES/MODEL_ABSTRACT_METHODS_MUST_BE_OVERRIDDEN</a></li><li><a href="global.html#uuidv4">uuidv4</a></li></ul></div>
+                    </nav>
+                </div>
+            </div>
+            <div class="column is-9-desktop">
+                <div class="content" id="main-content-wrapper">
+                    <header class="page-title">
+                        <p>Source</p>
+                        <h1>components/calendar/WeekViewList.js</h1>
+                    </header>
+                    
+                    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import PropTypes from 'prop-types';
+import React from 'react';
+import { Row, Col, Card } from 'antd';
+import moment from 'moment';
+
+import { HOUR_MILLISECONDS } from 'lib/constants/date';
+import EventModel from 'lib/models/Calendar/EventModel';
+
+import EventView from 'components/calendar/EventView';
+
+/**
+ * Week type 에 보여지는 일단위, 시간영역 View 처리
+ * 
+ * @alias components/calendar/WeekViewList
+ * @module components/calendar/WeekViewList
+ * 
+ * @requires components/calendar/EventView
+ * 
+ * @param {Object} props
+ * @param {Boolean} props.useStartDay
+ * @param {Date} props.startDate month 의 시작일 Date 객체
+ * @param {Date} props.endDate month 의 마지막일 Date 객체
+ * @param {Array.&lt;Date>} props.week 해당 주의 Date 객체 리스트
+ * @param {Array.&lt;EventModel>} props.events view 에 노출할 events
+ * @param {Function} [props.viewDateClick=(date) => {}] date 영역 클릭시
+ * @param {Function} [props.viewEventClick=({ date, event }) => {}] eventView 영역 클릭시
+ * 
+ * @see EventModel
+ */
+const WeekViewList = props => {
+  const {
+    useStartDay,
+    startDate,
+    endDate,
+    week,
+    events,
+    viewDateClick,
+    viewEventClick
+  } = props;
+
+  const startDay = startDate.getDay();
+  const endDateTime = endDate.getTime();
+
+  const handleClick = date => viewDateClick(date);
+  const handleEventClick = (event, text) => viewEventClick(event, text);
+
+  const getEvents = (date, eventListner) => {
+    const hasEvents = events.filter(event => {
+      const dateTime = date.getTime();
+      const { startAt, endAt } = event.toModel();
+      return +new Date(startAt) >= dateTime &amp;&amp; +new Date(endAt) &lt;= (dateTime + HOUR_MILLISECONDS);
+    });
+
+    return (
+      &lt;>
+        {hasEvents.map(event => {
+          const { uuid } = event.toModel();
+          return (
+            &lt;EventView 
+              key={uuid}
+              date={date}
+              event={event}
+              onEventClick={eventListner}
+            />
+          );
+        })}
+      &lt;/>
+    );
+  }
+
+  return (
+    &lt;Row className="calendar-date" type="flex" justify="start" align="top">
+      {week.map((day, index) => {
+        // const value = day.getDate();
+        const prevDate = (useStartDay &amp;&amp; index &lt; startDay);
+        const isDimmed = day.getTime() > endDateTime || prevDate;
+        const listener = _ => handleClick(day);
+        const eventListner = (event, text) => handleEventClick(event, text);
+        const event = getEvents(day, eventListner);
+
+        // FIXME: 임시 처리
+        const isToday = moment(new Date()).format('YYYY-MM-DD') === moment(day).format('YYYY-MM-DD');
+        const dateClassName = (() => {
+          let className = '';
+          className += isDimmed ? 'is-dimmed' : '';
+          className += isToday ? 'is-today' : '';
+          return className;
+        })();
+
+        return (
+          &lt;Col 
+            key={`view-${day}`}
+            span={24}
+            className={dateClassName}
+            onClick={listener}
+          >
+            &lt;Card className="calendar-date__event">{ event }&lt;/Card>
+          &lt;/Col>
+        );
+      })}
+    &lt;/Row>
+  );
+}
+
+WeekViewList.propTypes = {
+  useStartDay: PropTypes.bool.isRequired,
+  startDate: PropTypes.instanceOf(Date).isRequired,
+  endDate: PropTypes.instanceOf(Date).isRequired,
+  week: PropTypes.arrayOf(Date).isRequired,
+  events: PropTypes.arrayOf(PropTypes.instanceOf(EventModel)).isRequired,
+  viewDateClick: PropTypes.func,
+  viewEventClick: PropTypes.func,
+};
+
+WeekViewList.defaultProps = {
+  viewDateClick: () => {},
+  viewEventClick: () => {}
+};
+
+export default WeekViewList;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Jan 03 2020 02:04:21 GMT+0900 (GMT+09:00)</p>
+        <p class="sidebar-created-by">
+            <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+            <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+        </p>
+    </div>
+</footer>
+
+
+<script src="scripts/app.min.js"></script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
