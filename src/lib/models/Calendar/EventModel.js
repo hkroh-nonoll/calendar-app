@@ -3,7 +3,7 @@ import ExtsDate from 'lib/extensions/ExtsDate';
 import Model from 'lib/models/Model';
 
 /**
- * 일정(event) Model class<br/>
+ * Event Model class<br/>
  * Calendar 에 등록되는 일정을 관리
  * @export
  * @class EventModel
@@ -19,8 +19,8 @@ export default class EventModel extends Model {
 
   /**
    * 기본값 설정
-   * @param {object} [data={}]
-   * @param {string} [data.title='']
+   * @param {Object} [data={}]
+   * @param {String} [data.title='']
    * @param {Date} [data.startAt=new Date()]
    * @param {Date} [data.endAt=ExtsDate.addHour({ date: new Date() })]
    * @returns {EvenModel}
@@ -85,6 +85,7 @@ export default class EventModel extends Model {
    * @memberof EventModel
    */
   fromVo() {
+    // TODO: 추가 처리할 요소가 생겼을때 작성한다
     return '';
   }
 
@@ -105,6 +106,7 @@ export default class EventModel extends Model {
    * @memberof EventModel
    */
   toVo() {
+    // TODO: 추가 처리할 요소가 생겼을때 작성한다
     return '';
   }
 
@@ -113,7 +115,7 @@ export default class EventModel extends Model {
    * @memberof EventModel
    */
   destroy() {
-    super.destroy();
     // TODO: 추가 처리할 요소가 생겼을때 작성한다
+    super.destroy();
   }
 }

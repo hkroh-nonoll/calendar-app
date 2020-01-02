@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const NotFoundPage = props => {
+const NotFoundPage = () => {
   return (
     <>
-      <p>NotFoundPage</p>
+      <p>Not Found Page</p>
       <Link to="/">
         <button>index</button>
       </Link>

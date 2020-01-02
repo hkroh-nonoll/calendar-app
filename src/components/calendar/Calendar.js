@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
 
@@ -34,27 +35,33 @@ const calendarModel = new CalendarModel();
 /**
  * Component Calendar
  * @component
+ * @see VIEW_TYPE
+ * @see CalendarModel
+ * @see EventModel
  * @example
+ * import React, { useState, useCallback, useEffect } from 'react';
  * import Calendar from 'lib/models/Calendar/EventModel';
  * import EventModel from 'lib/models/Calendar/EventModel';
- * const defaultDate = new Date();
- * const events = [{ title: '일정1', startAt: '2019-12-31T10:00:00+09:00', endAt: '2019-12-31T11:00:00+09:00' }];
- * // const events = [new EventModel({ title: '일정2' })];
+ * import { VIEW_TYPE } from 'lib/constants/calendar';
  * 
- * ...
- * return (
- *   <Calendar defaultDate={defaultDate} events={events} />
- * );
- * ...
+ * const SampleCalendar = () => {
+ *  const defaultDate = new Date();
+ *  const events = [{ title: '일정1', startAt: '2019-12-31T10:00:00+09:00', endAt: '2019-12-31T11:00:00+09:00' }];
+ *  // const events = [new EventModel({ title: '일정2' })];
+ *  
+ *  return (
+ *    <Calendar defaultDate={defaultDate} defaultViewType={VIEW_TYPE.MONTH} events={events} />
+ *  );
+ * }
  */
 const Calendar = props => {
-  const { defaultDate, events } = props;
+  const { defaultDate, defaultViewType, events } = props;
 
   const [month, setMonth] = useState(defaultDate);
   const [week, setWeek] = useState(ExtsDate.startDateOfWeek({ date: defaultDate }));
   const [startDate, setStartDate] = useState(ExtsDate.startDateOfMonth({ date: month }));
   const [endDate, setEndDate] = useState(ExtsDate.endOfMonth({ date: month }));
-  const [viewType, setViewType] = useState(VIEW_TYPE.WEEK);
+  const [viewType, setViewType] = useState(defaultViewType);
   const [visibleModal, setVisibleModal] = useState(false);
   const [eventTitle, setEventTitle] = useState(null);
   const [eventStartAt, setEventStartAt] = useState(null);
@@ -116,7 +123,7 @@ const Calendar = props => {
         updateMonth(defaultDate);
         break;
     }
-  }, [defaultDate, month, week, viewType]);
+  }, [defaultDate, viewType]);
 
   const onCalendarNextClick = useCallback(_ => {
     switch (viewType) {
@@ -146,7 +153,7 @@ const Calendar = props => {
         break;
     }
     setViewType(value);
-  }, []);
+  }, [month, week]);
 
   const onDateClick = useCallback(date => {
     const startAt = date;
@@ -211,7 +218,6 @@ const Calendar = props => {
   const onModalCancelClick = _ => clearModal();
   const onModalSubmit = _ => console.log('Calendar onModalSubmit');
 
-  // TODO: memo 처리 가능할지, Model 연결 테스트 진행
   useEffect(() => {
     calendarModel.setEventList(CalendarModel.toEvents(events));
     setEventList(calendarModel.getEventList());
@@ -262,8 +268,7 @@ const Calendar = props => {
         onDateClick={onDateClick}
         onEventClick={onEventClick}
       />
-      
-      {/* 임시 - 재갱신 처리 */}
+
       {visibleModal && 
         <EventModal 
           visible={visibleModal}
@@ -281,6 +286,7 @@ const Calendar = props => {
   );
 }
 
+// test 용
 const dummyEvents = (() => {
   const date = new Date('2020-01-01T00:00:00');
   return Array(2).fill(1).map((_, value) => {
@@ -290,18 +296,29 @@ const dummyEvents = (() => {
       endAt: ExtsDate.addHour({ date, value: value + 1 })
     }
   });
-
-  // return [
-  //   {
-  //     title: '12월 31일 10 ~ 11시 일정',
-  //     startAt: '2019-12-31T10:00:00+09:00',
-  //     endAt: '2019-12-31T11:00:00+09:00'
-  //   }
-  // ];
 })();
 
 Calendar.defaultProps = {
+  /**
+   * 기본 일자 설정
+   */
+  defaultDate: PropTypes.instanceOf(Date),
+  /**
+   * 기본 화면 설정( 월 / 주 )
+   */
+  defaultViewType: PropTypes.arrayOf([
+    VIEW_TYPE.MONTH,
+    VIEW_TYPE.WEEK
+  ]),
+  /**
+   * event 설정
+   */
+  events: PropTypes.array
+};
+
+Calendar.defaultProps = {
   defaultDate: new Date(),
+  defaultViewType: VIEW_TYPE.MONTH,
   events: dummyEvents
 };
 

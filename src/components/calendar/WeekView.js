@@ -19,6 +19,8 @@ const WeekView = props => {
   const [hourMarkerPos, setHourMarkerPos] = useState(0);
   const maxDayMilliseconds = 86400000;
   const renderDuration = 1000 * 1;
+  // 23:28:21 GMT+0900 (한국 표준시) > 23:28
+  const currentTime = new Date().toTimeString().replace(/.*(\d{2}:\d{2}):\d{2}.*/, '$1');
 
   const hourMarkerStyle = {
     position: 'absolute',
@@ -87,13 +89,14 @@ const WeekView = props => {
           </Row>
         </div>
         <div style={{ ...hourMarkerStyle, top: hourMarkerPos }}>
-          <div style={lineStyle}><span className="blind">Today</span></div>
-          {/* 
-          <div><span className="blind">이전 일자 표현</span></div>
-          <div><span className="blind">Today</span></div>
-          <div><span className="blind">Today 영역</span></div>
-          <div><span className="blind">다음 일자 표현</span></div>
-          */}
+          <Row>
+            <Col span={3}>
+              <span className="current-time">{currentTime}</span>
+            </Col>
+            <Col span={21}>
+              <div style={lineStyle}><span className="blind">Today</span></div>
+            </Col>
+          </Row>
         </div>
       </Col>
     </div>
