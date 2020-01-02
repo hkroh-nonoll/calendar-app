@@ -33,6 +33,7 @@ notifications:
 
 
 install:
+  - nvm install 10
   - yarn
 
 # before_install:
