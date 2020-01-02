@@ -1,5 +1,6 @@
 import Model from 'lib/models/Model';
 import EventModel from 'lib/models/Calendar/EventModel';
+import { MINUTE_MILLISECONDS } from 'lib/constants/date';
 import { CALENDAR_INVALID_ADD_EVENT, CALENDAR_INVALID_MATCHED_EVENT, EVENT_INVALID_TIME_DIFF } from 'lib/constants/errorTypes';
 
 /**
@@ -10,12 +11,21 @@ import { CALENDAR_INVALID_ADD_EVENT, CALENDAR_INVALID_MATCHED_EVENT, EVENT_INVAL
  * @extends {Model}
  */
 export default class CalendarModel extends Model {
+
   constructor() {
     super();
 
     this._events = [];
   }
 
+  /**
+   * Calendar 에 event 추가
+   * @param {object | EventModel} eventData
+   * @returns {CalendarModel}
+   * @throws {ERROR_TYPES/EVENT_INVALID_TIME_DIFF} 일정 시작일 / 종료일 규격이 유효하지 않은 경우
+   * @throws {ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT} Calendar event 추가시에 유효하지 않은 경우
+   * @memberof CalendarModel
+   */
   addEvent(eventData) {
     const isEventModel = eventData instanceof EventModel;
 
@@ -40,6 +50,15 @@ export default class CalendarModel extends Model {
     return this;
   }
 
+  /**
+   * Calendar 에 등록된 event 수정
+   * @param {object | EventModel} eventData
+   * @returns {CalendarModel}
+   * @throws {ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT} Calendar 등록된 event와 매칭되지 않을 경우
+   * @throws {ERROR_TYPES/EVENT_INVALID_TIME_DIFF} 일정 시작일 / 종료일 규격이 유효하지 않은 경우
+   * @throws {ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT} Calendar event 추가시에 유효하지 않은 경우
+   * @memberof CalendarModel
+   */
   modifyEvent(eventData) {
     const isEventModel = eventData instanceof EventModel;
 
@@ -73,6 +92,13 @@ export default class CalendarModel extends Model {
     return this;
   }
 
+  /**
+   * Calendar 에 등록된 event 제거
+   * @param {object | EventModel} eventData
+   * @returns {CalendarModel}
+   * @throws {ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT} Calendar 등록된 event와 매칭되지 않을 경우
+   * @memberof CalendarModel
+   */
   deleteEvent(eventData) {
     const isEventModel = eventData instanceof EventModel;
 
@@ -98,27 +124,28 @@ export default class CalendarModel extends Model {
     return this;
   }
 
+  /**
+   * 신규 event가, 기존 등록되어 있는 리스트에 중복되는 케이스가 있는 지 검증
+   * @param {EventModel} newEvent
+   * @returns {boolean}
+   * @memberof CalendarModel
+   */
   isValidEventList(newEvent) {
     let { startAt: newStartAt, endAt: newEndAt, uuid: newUuid } = newEvent.toModel();
-    newStartAt = +new Date(newStartAt);
-    newEndAt = +new Date(newEndAt);
+    newStartAt = +new Date(newStartAt) + MINUTE_MILLISECONDS;
+    newEndAt = +new Date(newEndAt) - MINUTE_MILLISECONDS;
 
     const events = this.getEventList();
     const isValid = (events || []).every(event => {
       let { startAt, endAt, uuid } = event.toModel();
-      startAt = +new Date(startAt);
-      endAt = +new Date(endAt);
+      startAt = +new Date(startAt) + MINUTE_MILLISECONDS;
+      endAt = +new Date(endAt) - MINUTE_MILLISECONDS;
 
-      if (uuid === newUuid) {
-        return true;
-      }
-
-      if (newStartAt >= startAt && newStartAt <= endAt) {
-        return false;
-      }
-
-      if (newEndAt >= startAt && newEndAt <= endAt) {
-        return false;
+      // 중복 시간 체크
+      if ((newStartAt >= startAt && newStartAt <= endAt) || (newEndAt >= startAt && newEndAt <= endAt)) {
+        // 동일 uuid 판단
+        if (uuid === newUuid) return true;
+        else return false;
       }
 
       return true;
@@ -127,17 +154,24 @@ export default class CalendarModel extends Model {
     return isValid;
   }
 
+  /**
+   * event 일괄 설정
+   * @param {array} events
+   * @returns {CalendarModel}
+   * @memberof CalendarModel
+   */
   setEventList(events) {
-    // const isVaild = (events || []).every(event => this.isValidEventList(event));
-    // if (isVaild) {
-    //   this._events = events;
-    // }
-    this._events = events;
+    this._events = CalendarModel.toEvents(events);
     return this;
   }
 
+  /**
+   * Calendar 에 등록된 event 반환
+   * @returns {array.<EventModel>}
+   * @memberof CalendarModel
+   */
   getEventList() {
-    return this._events;
+    return this._events || [];
   }
 
   /**
@@ -154,23 +188,55 @@ export default class CalendarModel extends Model {
     return this;
   }
 
+  /**
+   * Calendar 에 등록 가능한 event 로 반환
+   * @static
+   * @param {array} events
+   * @returns {array.<EventModel>}
+   * @memberof CalendarModel
+   */
   static toEvents(events) {
     return (events || [])
-      .map(event => new EventModel(event))
+      .map(event => {
+        if (event instanceof EventModel) {
+          return event;
+        } else {
+          return new EventModel(event);
+        }
+      })
       .filter(event => event);
   }
 
-  fromVo(vo) {
-    return this.toEvents(vo);
-  }
-
-  toModel() {
-    return this._model;
-  }
-
-  toVo() {
+  /**
+   * @memberof CalendarModel
+   */
+  fromVo() {
+    // TODO: 추가 처리할 요소가 생겼을때 작성한다
     return '';
   }
 
-  destroy() {}
+  /**
+   * @memberof CalendarModel
+   */
+  toModel() {
+    // TODO: 추가 처리할 요소가 생겼을때 작성한다
+    return '';
+  }
+
+  /**
+   * @memberof CalendarModel
+   */
+  toVo() {
+    // TODO: 추가 처리할 요소가 생겼을때 작성한다
+    return '';
+  }
+
+  /**
+   * destroy
+   * @memberof CalendarModel
+   */
+  destroy() {
+    // TODO: 추가 처리할 요소가 생겼을때 작성한다
+    super.destroy();
+  }
 }

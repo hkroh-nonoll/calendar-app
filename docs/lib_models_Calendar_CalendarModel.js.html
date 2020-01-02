@@ -46,7 +46,7 @@
             <div class="column is-3" id="sidebarNav">
                 <div class="sidebar">
                     <nav>
-                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="CalendarModel.html">CalendarModel</a></li><li><a href="EventModel.html">EventModel</a></li><li><a href="ExtsDate.html">ExtsDate</a></li><li><a href="Model.html">Model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Calendar">Calendar</a></li><li><a href="global.html#CALENDAR">CALENDAR</a></li><li><a href="global.html#CALENDAR/VIEW_TYPE">CALENDAR/VIEW_TYPE</a></li><li><a href="global.html#DATE">DATE</a></li><li><a href="global.html#DATE/DAY_MILLISECONDS">DATE/DAY_MILLISECONDS</a></li><li><a href="global.html#DATE/DAY_NAME_WEEK">DATE/DAY_NAME_WEEK</a></li><li><a href="global.html#DATE/HOUR_MILLISECONDS">DATE/HOUR_MILLISECONDS</a></li><li><a href="global.html#DATE/MAX_DATES">DATE/MAX_DATES</a></li><li><a href="global.html#DATE/START_DAY_WEEK">DATE/START_DAY_WEEK</a></li><li><a href="global.html#DATE/UNIT">DATE/UNIT</a></li><li><a href="global.html#DATE/WEEK_SIZE">DATE/WEEK_SIZE</a></li><li><a href="global.html#deepFreeze">deepFreeze</a></li><li><a href="global.html#ERROR_TYPES">ERROR_TYPES</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT">ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT">ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT</a></li><li><a href="global.html#ERROR_TYPES/EVENT_INVALID_TIME_DIFF">ERROR_TYPES/EVENT_INVALID_TIME_DIFF</a></li><li><a href="global.html#uuidv4">uuidv4</a></li></ul></div>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="CalendarModel.html">CalendarModel</a></li><li><a href="EventModel.html">EventModel</a></li><li><a href="ExtsDate.html">ExtsDate</a></li><li><a href="Model.html">Model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Calendar">Calendar</a></li><li><a href="global.html#CALENDAR">CALENDAR</a></li><li><a href="global.html#CALENDAR/VIEW_TYPE">CALENDAR/VIEW_TYPE</a></li><li><a href="global.html#DATE">DATE</a></li><li><a href="global.html#DATE/DAY_MILLISECONDS">DATE/DAY_MILLISECONDS</a></li><li><a href="global.html#DATE/DAY_NAME_WEEK">DATE/DAY_NAME_WEEK</a></li><li><a href="global.html#DATE/HOUR_MILLISECONDS">DATE/HOUR_MILLISECONDS</a></li><li><a href="global.html#DATE/MAX_DATES">DATE/MAX_DATES</a></li><li><a href="global.html#DATE/MINUTE_MILLISECONDS">DATE/MINUTE_MILLISECONDS</a></li><li><a href="global.html#DATE/START_DAY_WEEK">DATE/START_DAY_WEEK</a></li><li><a href="global.html#DATE/UNIT">DATE/UNIT</a></li><li><a href="global.html#DATE/WEEK_SIZE">DATE/WEEK_SIZE</a></li><li><a href="global.html#deepFreeze">deepFreeze</a></li><li><a href="global.html#ERROR_TYPES">ERROR_TYPES</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT">ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT</a></li><li><a href="global.html#ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT">ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT</a></li><li><a href="global.html#ERROR_TYPES/EVENT_INVALID_TIME_DIFF">ERROR_TYPES/EVENT_INVALID_TIME_DIFF</a></li><li><a href="global.html#ERROR_TYPES/MODEL_ABSTRACT_METHODS_MUST_BE_OVERRIDDEN">ERROR_TYPES/MODEL_ABSTRACT_METHODS_MUST_BE_OVERRIDDEN</a></li><li><a href="global.html#uuidv4">uuidv4</a></li></ul></div>
                     </nav>
                 </div>
             </div>
@@ -66,6 +66,7 @@
         <article>
             <pre class="prettyprint source linenums"><code>import Model from 'lib/models/Model';
 import EventModel from 'lib/models/Calendar/EventModel';
+import { MINUTE_MILLISECONDS } from 'lib/constants/date';
 import { CALENDAR_INVALID_ADD_EVENT, CALENDAR_INVALID_MATCHED_EVENT, EVENT_INVALID_TIME_DIFF } from 'lib/constants/errorTypes';
 
 /**
@@ -76,12 +77,21 @@ import { CALENDAR_INVALID_ADD_EVENT, CALENDAR_INVALID_MATCHED_EVENT, EVENT_INVAL
  * @extends {Model}
  */
 export default class CalendarModel extends Model {
+
   constructor() {
     super();
 
     this._events = [];
   }
 
+  /**
+   * Calendar 에 event 추가
+   * @param {object | EventModel} eventData
+   * @returns {CalendarModel}
+   * @throws {ERROR_TYPES/EVENT_INVALID_TIME_DIFF} 일정 시작일 / 종료일 규격이 유효하지 않은 경우
+   * @throws {ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT} Calendar event 추가시에 유효하지 않은 경우
+   * @memberof CalendarModel
+   */
   addEvent(eventData) {
     const isEventModel = eventData instanceof EventModel;
 
@@ -106,6 +116,15 @@ export default class CalendarModel extends Model {
     return this;
   }
 
+  /**
+   * Calendar 에 등록된 event 수정
+   * @param {object | EventModel} eventData
+   * @returns {CalendarModel}
+   * @throws {ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT} Calendar 등록된 event와 매칭되지 않을 경우
+   * @throws {ERROR_TYPES/EVENT_INVALID_TIME_DIFF} 일정 시작일 / 종료일 규격이 유효하지 않은 경우
+   * @throws {ERROR_TYPES/CALENDAR_INVALID_ADD_EVENT} Calendar event 추가시에 유효하지 않은 경우
+   * @memberof CalendarModel
+   */
   modifyEvent(eventData) {
     const isEventModel = eventData instanceof EventModel;
 
@@ -139,6 +158,13 @@ export default class CalendarModel extends Model {
     return this;
   }
 
+  /**
+   * Calendar 에 등록된 event 제거
+   * @param {object | EventModel} eventData
+   * @returns {CalendarModel}
+   * @throws {ERROR_TYPES/CALENDAR_INVALID_MATCHED_EVENT} Calendar 등록된 event와 매칭되지 않을 경우
+   * @memberof CalendarModel
+   */
   deleteEvent(eventData) {
     const isEventModel = eventData instanceof EventModel;
 
@@ -164,27 +190,28 @@ export default class CalendarModel extends Model {
     return this;
   }
 
+  /**
+   * 신규 event가, 기존 등록되어 있는 리스트에 중복되는 케이스가 있는 지 검증
+   * @param {EventModel} newEvent
+   * @returns {boolean}
+   * @memberof CalendarModel
+   */
   isValidEventList(newEvent) {
     let { startAt: newStartAt, endAt: newEndAt, uuid: newUuid } = newEvent.toModel();
-    newStartAt = +new Date(newStartAt);
-    newEndAt = +new Date(newEndAt);
+    newStartAt = +new Date(newStartAt) + MINUTE_MILLISECONDS;
+    newEndAt = +new Date(newEndAt) - MINUTE_MILLISECONDS;
 
     const events = this.getEventList();
     const isValid = (events || []).every(event => {
       let { startAt, endAt, uuid } = event.toModel();
-      startAt = +new Date(startAt);
-      endAt = +new Date(endAt);
+      startAt = +new Date(startAt) + MINUTE_MILLISECONDS;
+      endAt = +new Date(endAt) - MINUTE_MILLISECONDS;
 
-      if (uuid === newUuid) {
-        return true;
-      }
-
-      if (newStartAt >= startAt &amp;&amp; newStartAt &lt;= endAt) {
-        return false;
-      }
-
-      if (newEndAt >= startAt &amp;&amp; newEndAt &lt;= endAt) {
-        return false;
+      // 중복 시간 체크
+      if ((newStartAt >= startAt &amp;&amp; newStartAt &lt;= endAt) || (newEndAt >= startAt &amp;&amp; newEndAt &lt;= endAt)) {
+        // 동일 uuid 판단
+        if (uuid === newUuid) return true;
+        else return false;
       }
 
       return true;
@@ -193,17 +220,24 @@ export default class CalendarModel extends Model {
     return isValid;
   }
 
+  /**
+   * event 일괄 설정
+   * @param {array} events
+   * @returns {CalendarModel}
+   * @memberof CalendarModel
+   */
   setEventList(events) {
-    // const isVaild = (events || []).every(event => this.isValidEventList(event));
-    // if (isVaild) {
-    //   this._events = events;
-    // }
-    this._events = events;
+    this._events = CalendarModel.toEvents(events);
     return this;
   }
 
+  /**
+   * Calendar 에 등록된 event 반환
+   * @returns {array.&lt;EventModel>}
+   * @memberof CalendarModel
+   */
   getEventList() {
-    return this._events;
+    return this._events || [];
   }
 
   /**
@@ -220,25 +254,57 @@ export default class CalendarModel extends Model {
     return this;
   }
 
+  /**
+   * Calendar 에 등록 가능한 event 로 반환
+   * @static
+   * @param {array} events
+   * @returns {array.&lt;EventModel>}
+   * @memberof CalendarModel
+   */
   static toEvents(events) {
     return (events || [])
-      .map(event => new EventModel(event))
+      .map(event => {
+        if (event instanceof EventModel) {
+          return event;
+        } else {
+          return new EventModel(event);
+        }
+      })
       .filter(event => event);
   }
 
-  fromVo(vo) {
-    return this.toEvents(vo);
-  }
-
-  toModel() {
-    return this._model;
-  }
-
-  toVo() {
+  /**
+   * @memberof CalendarModel
+   */
+  fromVo() {
+    // TODO: 추가 처리할 요소가 생겼을때 작성한다
     return '';
   }
 
-  destroy() {}
+  /**
+   * @memberof CalendarModel
+   */
+  toModel() {
+    // TODO: 추가 처리할 요소가 생겼을때 작성한다
+    return '';
+  }
+
+  /**
+   * @memberof CalendarModel
+   */
+  toVo() {
+    // TODO: 추가 처리할 요소가 생겼을때 작성한다
+    return '';
+  }
+
+  /**
+   * destroy
+   * @memberof CalendarModel
+   */
+  destroy() {
+    // TODO: 추가 처리할 요소가 생겼을때 작성한다
+    super.destroy();
+  }
 }
 </code></pre>
         </article>
@@ -255,7 +321,7 @@ export default class CalendarModel extends Model {
 
 <footer class="footer">
     <div class="content has-text-centered">
-        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Jan 02 2020 03:28:22 GMT+0900 (GMT+09:00)</p>
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Jan 02 2020 23:48:59 GMT+0900 (GMT+09:00)</p>
         <p class="sidebar-created-by">
             <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
             <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
