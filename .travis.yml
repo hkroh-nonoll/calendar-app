@@ -4,6 +4,7 @@ node_js:
 - "10"
 
 cache:
+  yarn: true
   directories:
     - node_modules
 
@@ -34,6 +35,8 @@ notifications:
 
 install:
   - nvm install 10
+
+before_script:
   - yarn
 
 # before_install:
