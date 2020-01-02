@@ -31,8 +31,8 @@
           "href": "https://hkroh-nonoll.github.io/calendar-app"
         },
         {
-          "label": "Example Application",
-          "href": "https://admin-bro-example-app.herokuapp.com/admin"
+          "label": "Heroku",
+          "href": "https://hkroh-calendar-app.herokuapp.com"
         }
       ]
     }

@@ -1,68 +1,156 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![Build Status](https://travis-ci.org/nonoll/github-feature-test.svg?branch=master)](https://travis-ci.org/nonoll/github-feature-test)
+[![Heroku](https://heroku-badge.herokuapp.com/?app=hkroh-calendar-app&style=flat)](https://hkroh-calendar-app.herokuapp.com)
 
-## Available Scripts
+# Calendar App
+- 일정을 관리하는 Calendar 웹 어플리케이션 구현
 
-In the project directory, you can run:
+* * *
 
-### `yarn start`
+## 1. 개발 전략
+### 1.1. 구현 요건 판단
+- 경험했던 프로젝트에서 fullCalendar, tui.calendar 로 구성하던 기능으로 판단
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- 진행 목표
+  - git issue / milestone / project 활용할 것
+  - 레퍼런스 분석 > 구현 요건 개발 > Application 개발
+  - 되도록이면 특정 프레임워크에 종속적이지 않게 구현하기로 함
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### 1.2. 레퍼런스 분석
+- [calendar-reference](https://github.com/hkroh-nonoll/calendar-reference)
+- 기존 프로젝트간 사용해 봤던 것을 우선순위로 선정하여 분석
+  - `fullCalendar > tui.calendar > vue-fullcallendar > react-big-calendar`
 
-### `yarn test`
+### 1.3. 프레임워크 선정
+- react 진행 결정
+- 실무에서는 vue 로 주로 사용하였으나, [kakaopay](https://www.kakaopay.com/) 사이트가 react 로 구성된 것으로 확인
+- 제대로 공부해본 적이 없어서, 레퍼런스 분석 기간 동안 학습 병행
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 1.4. 일정 할당
+- 일정내에 모든 구현은 어려울 것으로 예상
+- 후순위 구현 요건 선정
+  - 서버 구현, 데이터베이스 사용
+    - `프레임워크 state 관리로 선대응 진행`
+  - Drag n Drop 구현
+- 구분(총 7일)
+  - 2일(주말): 레퍼런스 분석, 개발환경(프레임워크) 선택, react 학습
+  - 1일: 기본 베이스 구성( UI )
+  - 2일(신정): 구현 요건 개발
+  - 1일: 디버깅 및 소스 정리
+  - 1일: 마무리 확인, 제출
 
-### `yarn build`
+### 1.5. 구현 단계
+- 월 표현
+  - 기간에 따라 주 변화폭( 높이 )이 생김
+  - 주 단위 표현을 고려하면, 전월 / 다음월 일자도 노출이 되어야 함
+    - `요일(7일) * 최대주(6) 를 기준으로 42일씩 표현 처리`
+- 주 표현
+  - 월 표현과 동일한 맥락으로 접근
+  - 월과 다른것은 세로(시간) 기준으로 정렬이 되어야 하는 점
+    - `시간영역( 00:00 ~ 23:00 ) 구성, 요일(6) * 시간(24) 를 기준으로 144개의 시간 영역 구성`
+- 시간 처리 class 구현
+  - ExtsDate 구성
+    - `js Date 를 확장한다는 의미로 Exts 를 Prefix 로 설정`
+    - 월 / 주 표현을 위한 메소드 구현
+      - `메소드는 static 으로 구현하여 활용성을 높이려 함`
+* * *
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 2. 결과물
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### 2.1. 폴더 구조
+```bash
+├── docs                                            #jsdoc
+│
+├── git-hooks                                       #git commit message 처리용
+│
+├── public                                          #public
+│
+├── src
+│   ├── client                                      #client
+│   │
+│   ├── components                                  #components
+│   │
+│   ├── container                                   #container
+│   │
+│   ├── lib                                   
+│   │   ├── contants                                #상수 정의
+│   │   ├── extensions                              #js 내장기능 확장
+│   │   ├── models                                  #component model
+│   │   └── utils                                   #utils
+│   │
+│   ├── pages                                       #pages
+│   │
+│   ├── shared                                      #shared
+│   │
+│   ├── index.css 
+│   ├── index.js
+│   ├── serviceWorker.js
+│   └── setupTest.js
+│
+├── .env
+├── .gitignore
+├── CHANGELOG.md
+├── jsdoc.conf.json
+├── LICENSE
+├── package.json
+├── README.md
+└── yarn.lock
+```
+- 적절한 디렉토리 구조를 찾아보던 중 위 디렉토리 형태를 따름
+  - `src/client, src/shared 는 ssr 까지 고려된 구조로 판단함`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+* * *
 
-### `yarn eject`
+### 2.2. model
+- Back-end 데이터 조회 후 component 에 데이터를 주입하는 과정에서 데이터 파싱/정제 과정은 불가피 하다고 생각
+- component
+  - Back-end 데이터에 의해, props 등이 변경되지 않도록
+    - `atomic design`
+- model
+  - Back-end response 받은 데이터는 component 에 바로 맵핑하지 않는다
+  - model 을 통해 해당 component props 에 맞춰 정제되도록 하여 관리하는 것을 목표
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### 2.3. JS Doc
+- [https://hkroh-nonoll.github.io/calendar-app/](https://hkroh-nonoll.github.io/calendar-app/)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 2.4. Heroku
+- [https://hkroh-calendar-app.herokuapp.com/](https://hkroh-calendar-app.herokuapp.com/)
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### 2.5. 실행 방법
+- 기본 cra 로 프로젝트 환경 구성
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- install
+  ```bash
+  $ yarn install
+  ```
+- 실행
+  ```bash
+  $ yarn run serve
+  ```
 
-## Learn More
+- **npm run 정의**
+  ```bash
+  $ yarn run start             #heroku serve
+  $ yarn run serve             #cra start 설정 동일
+  $ yarn run build             #cra 설정 동일 + docs 실행
+  $ yarn run test              #cra 설정 동일
+  $ yarn run eject             #cra 설정 동일
+  $ yarn run docs              #jsdoc 생성
+  $ yarn run dev-env           #git-hooks 설정
+  ```
+* * *
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 3. 진행간 이슈 / 미비한 사항
+### 진행간 이슈
+- 학습단계에서의 useCallback
+  - 하위 컴포넌트로 useCallback 선언 된것을 전달했을 때, 값이 제대로 갱신이 안되는 경우 확인
+  - useCallback 선언시, 디펜던시가 되는 값을 제대로 설정하지 않았던 케이스
+    - `memoization`
+  - memoization 기능이 적용되어 있다고 판단되어, 적절한 사용은 좋다고 판단
+  - 경우에 따라 난해한 상황이 발생할 수 있어서 신중한 사용이 필요해 보임
 
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+### 미비한 사항
+- Drag n Drop 기능 미구현: [https://github.com/hkroh-nonoll/calendar-app/issues/15](https://github.com/hkroh-nonoll/calendar-app/issues/15)
+- 서버 연동 없음
+- store 미사용: useState 로만 처리
+- ui component test 코드
