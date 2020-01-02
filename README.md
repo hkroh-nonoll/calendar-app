@@ -103,7 +103,6 @@
 - Back-end 데이터 조회 후 component 에 데이터를 주입하는 과정에서 데이터 파싱/정제 과정은 불가피 하다고 생각
 - component
   - Back-end 데이터에 의해, props 등이 변경되지 않도록
-    - `atomic design`
 - model
   - Back-end response 받은 데이터는 component 에 바로 맵핑하지 않는다
   - model 을 통해 해당 component props 에 맞춰 정제되도록 하여 관리하는 것을 목표
